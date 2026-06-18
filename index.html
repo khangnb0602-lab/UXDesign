@@ -23,14 +23,15 @@
       --mono: 'Courier New', monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
 
+    /* ── FIX LỖI CUỘN IOS/IPHONE SE ── */
+    html, body { min-height: 100%; }
     body {
       font-family: var(--font);
       background: var(--bg);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* ── Floating restart control ─────────── */
@@ -41,6 +42,10 @@
       border-bottom: 1px solid var(--border);
       padding: 8px 14px;
       flex-shrink: 0;
+      /* FIX: Giữ thanh back dính trên cùng khi cuộn thân trang */
+      position: sticky;
+      top: 0;
+      z-index: 300;
     }
     .back-bar.show { display: flex; }
     .back-btn {
@@ -70,40 +75,25 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      /* Bỏ overflow: hidden để cho phép cuộn Native */
     }
 
-    /* App surface — fills the viewport like a real deployed app */
+    /* App surface */
     .browser-frame {
       flex: 1;
       display: flex;
       flex-direction: column;
       background: #fff;
-      overflow: hidden;
+      /* Bỏ overflow: hidden */
     }
-
-    /* ── SCROLL FIX: Changed from flex to block to guarantee vertical scrolling ── */
+    
     .browser-body {
       flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: block; 
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-
-    /* ── Step content panels ─────────────── */
-    /* ── SCROLL FIX: Removed height:100% and flex:1, added min-height and padding ── */
-    .step-content {
-      display: none;
+      display: flex;
       flex-direction: column;
-      min-height: 100%;
-      padding-bottom: 140px; /* Huge safety net for mobile bottom scrolling */
-      animation: fadeIn .3s ease;
+      /* Bỏ overflow-y: auto. Thêm padding khổng lồ để nút luôn nằm trên banner */
+      padding-bottom: 180px;
     }
-    .step-content.visible { display: flex; }
-
-    @keyframes fadeIn { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* ── Real-site interaction affordances ── */
     .service-tile:hover { border-color: #1a5ca8; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
@@ -193,169 +183,332 @@
       .a11y-toast-cta { display: none; }
     }
 
-    /* ── Site Header ── */
+    /* ── Step content panels ─────────────── */
+    .step-content {
+      display: none;
+      flex-direction: column;
+      /* Bỏ height: 100% để nội dung tự đẩy chiều cao */
+      flex: 1;
+      animation: fadeIn .3s ease;
+    }
+    .step-content.visible { display: flex; }
+
+    @keyframes fadeIn { from { transform: translateY(6px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+    /* ── Step 1: Broken table ────────────── */
     .bc-health-header {
       background: #003366;
       color: #fff;
       padding: 12px 20px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 8px;
       flex-shrink: 0;
     }
-    .bc-logo { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+    .bc-logo { font-size: 13px; font-weight: 800; letter-spacing: -.01em; }
     .bc-logo span { color: #ffd700; }
-    .bc-nav { font-size: 11px; opacity: .7; list-style: none; }
-
-    /* ── Desktop Step 1 ────────────── */
-    .page-heading { font-size: 18px; font-weight: 700; padding: 16px 20px 8px; color: #003366; }
+    .bc-nav { font-size: 11px; opacity: .7; margin-left: auto; display: flex; gap: 12px; list-style: none;}
+    
+    .page-heading { font-size: 16px; font-weight: 700; padding: 16px 20px 8px; color: #003366; }
+    .broken-table-wrap { padding: 0 20px; overflow-x: auto; }
+    .btable { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .btable th { background: #e8e8e3; padding: 6px 8px; text-align: left; border: 1px solid #ccc; white-space: nowrap; }
+    .btable td { padding: 5px 6px; border: 1px solid #e0e0da; white-space: nowrap; }
+    .overlap-row td { background: #fde8e8 !important; }
     .broken-badge {
-      display: inline-flex; align-items: center; gap: 4px;
+      display: flex; align-items: center; gap: 4px;
       background: #fde8e8; border: 1px solid #f5a0a0;
-      border-radius: 4px; padding: 7px 12px; margin: 8px 20px;
+      border-radius: 4px; padding: 7px 12px; margin: 10px 20px;
       font-size: 11px; color: var(--red); font-weight: 600;
     }
-    .table-container { padding: 0 20px; overflow-x: auto; }
-    .btable { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-    .btable th { background: #e8e8e3; padding: 8px; font-weight: 600; border: 1px solid #ccc; white-space: nowrap;}
-    .btable td { padding: 7px 8px; border: 1px solid #e0e0da; white-space: nowrap;}
-    .overlap-row td { background: #fde8e8 !important; }
 
     /* ── Step 2: Detection ───────────────── */
-    .tool-header {
-      background: #0f172a; color: #ffffff; padding: 12px 24px;
-      display: flex; align-items: center; gap: 12px;
+    .detect-overlay {
+      background: var(--amber-light);
+      border-bottom: 2px solid #fcd34d;
+      padding: 14px 20px;
+      flex-shrink: 0;
     }
-    .tool-badge {
-      font-size: 10px; font-weight: 700; background: rgba(74,222,128,.15);
-      color: #4ade80; border: 1px solid rgba(74,222,128,.3);
-      border-radius: 12px; padding: 4px 12px; margin-left: auto; letter-spacing: .04em;
+    .detect-row { display: flex; align-items: center; gap: 6px; }
+    .detect-icon { font-size: 16px; }
+    .detect-text { font-size: 13px; font-weight: 700; color: var(--amber); flex: 1; }
+    .detect-sub { font-size: 10px; color: #92400e; margin-top: 2px; }
+    .progress-track { height: 5px; background: #fde68a; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; width: 0%; background: var(--amber);
+      border-radius: 2px; transition: width 2.5s ease;
     }
-    .info-card { border: 1px solid #e0e0da; border-radius: 8px; overflow: hidden; background: #fff; }
-    .info-card-hdr { background: #fde8e8; padding: 8px 14px; font-size: 11px; font-weight: 700; color: #c0392b; text-transform: uppercase; border-bottom: 1px solid #e0e0da; }
-    .info-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 7px; font-size: 12px; color: #555; }
-    
-    .action-btn {
-      background: var(--blue); color: white; border: none; border-radius: 8px;
-      padding: 14px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: background 0.15s;
-    }
-    .action-btn:hover { background: #154a87; }
-    .action-btn.secondary { background: #fff; color: #1a1a1a; border: 1px solid #d8d4ce; }
-    .action-btn.secondary:hover { background: #f5f5f0; }
-
-    /* ── Step 3 & Loading ───────────────── */
-    .detect-banner {
-      background: var(--amber-light); border-bottom: 2px solid #fcd34d;
-      padding: 14px 20px; display: flex; flex-direction: column; gap: 6px;
-    }
-    .detect-title { font-size: 14px; font-weight: 700; color: var(--amber); }
-    .progress-track { height: 5px; background: #fde68a; border-radius: 2px; overflow: hidden; margin-top: 4px;}
-    .progress-fill { height: 100%; width: 0%; background: var(--amber); border-radius: 2px; transition: width 2.5s ease; }
     .progress-fill.running { width: 100%; }
-    .parse-log { font-family: var(--mono); font-size: 11px; color: #888; display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
+    .s2-body { flex: 1; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; }
+    
+    .parse-log { font-family: var(--mono); font-size: 10px; color: #888; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
 
-    /* ── Clinic Result Step ────────────── */
+    /* ── Step 3: Clean result ────────────── */
     .result-header {
       background: var(--blue);
       color: #fff;
-      padding: 14px 20px;
+      padding: 16px 20px;
+      flex-shrink: 0;
     }
     .result-title { font-size: 16px; font-weight: 700; }
-    .result-sub { font-size: 11px; opacity: .75; margin-top: 3px; }
-    
+    .result-sub { font-size: 11px; opacity: .75; margin-top: 2px; }
+    .clinic-list { flex: 1; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
     .clinic-card {
-      background: #fff; border: 1px solid var(--border); border-radius: 8px;
-      padding: 14px; cursor: pointer; transition: all 0.15s ease;
-      margin-bottom: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: box-shadow .2s, border-color .2s, transform .15s;
     }
     .clinic-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.1); border-color: var(--blue); }
     .clinic-card.selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 2px rgba(26,92,168,.2); }
     .clinic-card.closed { opacity: .5; cursor: default; }
-    .clinic-card.closed:hover { box-shadow: none; border-color: var(--border); }
-    
-    .clinic-name { font-size: 15px; font-weight: 700; }
-    .clinic-meta { display: flex; justify-content: space-between; font-size: 12px; margin-top: 8px; }
-    .clinic-hours { color: var(--green); font-weight: 600;}
+    .clinic-name { font-size: 14px; font-weight: 700; }
+    .clinic-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+    .clinic-hours { font-size: 11px; color: var(--green); }
     .clinic-hours.closed { color: var(--red); }
-    .clinic-dist { color: var(--muted); }
-    .open-tag { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green-light); color: var(--green); padding: 4px 8px; border-radius: 4px; margin-top: 8px; }
-
-    /* ── Sticky Mobile Footer ── */
+    .clinic-dist { font-size: 11px; color: var(--muted); }
+    .open-tag {
+      font-size: 9px; font-weight: 700;
+      background: var(--green-light); color: var(--green);
+      padding: 2px 6px; border-radius: 4px;
+      margin-top: 5px; display: inline-block;
+    }
+    
     .selected-banner {
       background: var(--green-light);
       border-top: 1px solid #a5d6a7;
-      padding: 14px 20px;
+      padding: 12px 20px;
       font-size: 13px;
       color: var(--green);
       font-weight: 600;
       display: none;
-      flex-direction: column;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 -4px 12px rgba(0,0,0,.08);
     }
     .selected-banner.show { display: flex; }
-    .selected-actions { display: flex; gap: 8px; width: 100%; flex-direction: column; }
-    
-    .report-issue-btn, .register-btn {
-      color: #fff; border: none; border-radius: 6px; padding: 12px;
-      font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; width: 100%;
+    .selected-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    @media (max-width: 480px) {
+      .selected-banner.show { flex-direction: column; align-items: stretch; gap: 8px; }
+      .selected-actions { flex-direction: column; }
+      .report-issue-btn, .register-btn { width: 100%; text-align: center; }
     }
-    .report-issue-btn { background: #1a1a1a; }
-    .register-btn { background: var(--blue); }
+    .report-issue-btn {
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .report-issue-btn:hover { background: #333; }
+    .register-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .register-btn:hover { background: #154a87; }
 
-    /* ── Booking Form Container ─────── */
+    /* ── Time-slot registration panel ─────── */
     .register-panel {
       display: none;
       flex-direction: column;
       gap: 14px;
-      padding: 20px;
+      padding: 18px 20px;
       background: #fff;
-      border: 1px solid var(--blue);
-      border-radius: 8px;
+      border-top: 1px solid var(--border);
       margin: 16px 20px;
-      box-shadow: 0 4px 12px rgba(26,92,168,.15);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.05);
     }
     .register-panel.show { display: flex; }
-    .register-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-    .register-panel-title { font-size: 16px; font-weight: 700; color: var(--text); }
+    .register-panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .register-panel-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3;}
     .register-panel-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
     .register-close {
-      background: none; border: none; color: var(--muted); font-size: 18px;
-      cursor: pointer; padding: 0px 4px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0 4px;
+      line-height: 1;
     }
-
-    .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-    @media (max-width: 360px) { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
+    .register-close:hover { color: var(--text); }
+    
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 360px) {
+      .slot-grid { grid-template-columns: repeat(2, 1fr); }
+    }
     .slot-btn {
-      background: #fff; border: 1.5px solid var(--border); border-radius: 8px;
-      padding: 12px 8px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; text-align: center;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      transition: border-color .15s, background .15s;
     }
+    .slot-btn:hover { border-color: var(--blue); background: var(--blue-light); }
     .slot-btn.picked { border-color: var(--blue); background: var(--blue); color: #fff; }
     
-    .contact-form { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
-    .contact-field { display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 600; color: #555; }
-    .contact-field input {
-      border: 1.5px solid var(--border); border-radius: 8px; padding: 12px;
-      font-size: 14px; font-family: var(--font); color: var(--text);
+    /* Cải tiến Wrap cho iPhone SE */
+    .register-confirm-row { 
+      display: flex; 
+      justify-content: flex-end; 
+      gap: 10px; 
+      margin-top: 10px;
+      flex-wrap: wrap; 
     }
-    .contact-error { color: var(--red); font-size: 12px; font-weight: 600; margin-top: 10px; min-height: 1em; }
+    .register-confirm-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 1;
+      min-width: 140px;
+    }
+    .register-confirm-btn:disabled { background: #ccc; cursor: default; }
+    .register-back-btn {
+      background: none;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 1;
+      min-width: 100px;
+    }
 
-    .register-confirm-row { display: flex; gap: 10px; margin-top: 16px; }
-    .register-confirm-row button { flex: 1; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 8px; }
+    /* ── Contact details form ─────────────── */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+    }
+    .contact-field input {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--text);
+    }
+    .contact-field input:focus { outline: none; border-color: var(--blue); }
+    .contact-error {
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      min-height: 1em;
+    }
 
-    /* ── Modals & Confirmed states ────── */
+    /* ── Confirmed registration banner ────── */
     .registration-confirmed {
-      display: none; align-items: center; gap: 12px; padding: 16px 20px;
-      background: var(--blue-light); border-top: 1px solid #b8d4f5; margin-top: 20px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--blue-light);
+      border-top: 1px solid #b8d4f5;
+      margin-top: 16px;
     }
     .registration-confirmed.show { display: flex; }
-    
+    .rc-icon {
+      width: 26px; height: 26px; flex-shrink: 0;
+      background: var(--blue); color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900;
+    }
+    .rc-body { flex: 1; }
+    .rc-title { font-size: 14px; font-weight: 700; color: var(--blue); }
+    .rc-text { font-size: 12px; color: #1a1a1a; margin-top: 4px; }
+    .rc-conf-number {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      background: #fff;
+      border: 1px solid #b8d4f5;
+      border-radius: 5px;
+      padding: 4px 8px;
+      display: inline-block;
+      margin-top: 6px;
+      letter-spacing: .04em;
+    }
+    .rc-cancel {
+      background: none;
+      border: 1.5px solid #b8d4f5;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .rc-cancel:hover { background: #fff; }
+
+    /* ── System Logs (Step 5) ───────── */
+    .report-wrap { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .toast { background: var(--green-light); border: 1px solid #a5d6a7; border-radius: 6px; padding: 12px 14px; display: flex; gap: 8px; }
+    .log-block { font-family: var(--mono); font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
+    .log-entry { background: #f0f0ec; padding: 6px 12px; border-radius: 6px; color: #666; }
+    .log-entry.err { background: #fde8e8; color: var(--red); }
+    .log-entry.ok { background: var(--green-light); color: var(--green); }
+
+    /* ── Modals ─────────────────────── */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(20,20,20,.6); z-index: 200;
+      display: none; position: fixed; inset: 0; background: rgba(20,20,20,.6); z-index: 400;
       align-items: center; justify-content: center; padding: 20px;
     }
     .modal-overlay.show { display: flex; }
@@ -364,9 +517,12 @@
     }
     .modal-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
     .modal-desc { font-size: 14px; color: #555; line-height: 1.5; }
-    .modal-list { margin-left: 20px; margin-top: 12px; margin-bottom: 12px; font-size: 14px; color: #333; line-height: 1.6; }
     .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
-    .modal-actions button { flex: 1; padding: 12px; font-size: 14px; border-radius: 8px; }
+    .modal-actions button { flex: 1; padding: 12px; font-size: 14px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; }
+    .btn-secondary { background: #f5f5f0; color: #1a1a1a; border: 1px solid var(--border); }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .modal-list { margin-left: 20px; margin-top: 12px; margin-bottom: 12px; font-size: 14px; color: #333; line-height: 1.6; }
   </style>
 </head>
 <body>
@@ -380,26 +536,22 @@
         </button>
       </div>
       
-      <div class="browser-body" id="main-scroller">
-      
+      <div class="browser-body">
           <div class="step-content visible" id="d-step-0">
             <div class="bc-health-header">
-              <span class="bc-logo"><span>BC</span> Health Services</span>
+              <span class="bc-logo" style="font-size:15px;"><span>BC</span> Health Services</span>
+              <ul class="bc-nav"><li>Home</li><li>Find a Clinic</li></ul>
             </div>
             <div style="background:#003366;color:#fff;padding:26px 20px;">
               <div style="font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;">BC Health Services Portal</div>
               <div style="font-size:13px;opacity:.65;line-height:1.55;margin-bottom:16px;">Connecting British Columbians with healthcare resources, clinics, and providers across the province.</div>
             </div>
             <div style="padding:18px 20px;">
-              <div class="section-label">Services</div>
+              <div style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;">Services</div>
               <div class="services-grid">
                 <div class="service-tile" onclick="goTo(1)" style="background:#fff;border:1px solid #e0e0da;border-radius:8px;padding:16px;cursor:pointer;">
                   <div style="width:34px;height:34px;background:#e8f0fb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#1a5ca8;margin-bottom:10px;">+</div>
-                  <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">After-Hours Clinics</div>
-                </div>
-                <div class="service-tile disabled" style="background:#fff;border:1px solid #e0e0da;border-radius:8px;padding:16px;">
-                  <div style="width:34px;height:34px;background:#e8f5e9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#2e7d32;margin-bottom:10px;">Rx</div>
-                  <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">Find a Doctor</div>
+                  <div style="font-size:13px;font-weight:700;color:#1a1a1a;">After-Hours Clinics</div>
                 </div>
               </div>
             </div>
@@ -410,30 +562,21 @@
               <span class="bc-logo"><span>BC</span> Health Services</span>
             </div>
             <div class="page-heading">After-Hours Clinics</div>
-            <div class="broken-badge">⚠ Layout overflow rendering error</div>
+            <div class="broken-badge">⚠ Some columns may not display correctly on this browser</div>
             <div class="table-container">
               <table class="btable">
                 <thead>
-                  <tr>
-                    <th>Clinic Name</th>
-                    <th>Hours of Operation</th>
-                    <th>Phone Number</th>
-                  </tr>
+                  <tr><th>Clinic Name</th><th>Hours of Operation</th><th>Phone Number</th></tr>
                 </thead>
                 <tbody>
                   <tr class="overlap-row">
                     <td>Richmond 24-Hour Clinic</td>
-                    <td style="color:var(--red);">Open 24 Hours ███████████</td>
+                    <td style="color:var(--red);">Open 24 Hours ██████████</td>
                     <td>604-555-0400</td>
-                  </tr>
-                  <tr>
-                    <td>Burnaby Medical Centre</td>
-                    <td>Daily 9am–10pm</td>
-                    <td>604-555-0200</td>
                   </tr>
                   <tr class="overlap-row">
                     <td>Vancouver Care Clinic</td>
-                    <td style="color:var(--red);">Closed ████████████████</td>
+                    <td style="color:var(--red);">Mon–Fri 8am–11pm [Closed] ████</td>
                     <td>604-555-0100</td>
                   </tr>
                 </tbody>
@@ -444,42 +587,43 @@
               <div class="a11y-toast-icon">!</div>
               <div>
                 <div class="a11y-toast-title">Accessibility issue detected</div>
-                <div class="a11y-toast-sub">This table is broken. We can fix it for you.</div>
+                <div class="a11y-toast-sub">This table is broken on your screen. We can fix it for you.</div>
               </div>
             </div>
           </div>
 
           <div class="step-content" id="d-step-2">
-            <div class="tool-header">
-              <div style="font-size:15px;font-weight:700;">Accessibility Check-up</div>
-              <div class="tool-badge">ACTIVE</div>
+            <div style="background:#0f172a;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;">
+              <div style="font-size:15px;font-weight:700;">Accessibility Check-up Tool</div>
+              <div style="font-size:10px;font-weight:700;background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3);border-radius:12px;padding:4px 12px;margin-left:auto;">ACTIVE</div>
             </div>
             <div style="padding:20px;">
-              <div class="info-card">
-                <div class="info-card-hdr">Rendering Failure</div>
-                <div class="info-card-body">
-                  <div><strong>Element:</strong> Clinic hours table</div>
-                  <div><strong>Issue:</strong> Column overflow at mobile viewport</div>
+              <div style="background:#fff;border:1px solid #e0e0da;border-radius:8px;overflow:hidden;">
+                <div style="background:#fde8e8;padding:10px 14px;font-size:11px;font-weight:700;color:#c0392b;text-transform:uppercase;">Rendering Failure</div>
+                <div style="padding:14px;font-size:13px;color:#555;line-height:1.6;">
+                  <strong>Element:</strong> Clinic hours table<br>
+                  <strong>Issue:</strong> Column overflow at mobile viewport<br>
+                  <strong>Records affected:</strong> 18 clinic entries
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px;">
-                <button class="action-btn" onclick="goTo(3)">Fix this page view &rarr;</button>
-                <button class="action-btn secondary" onclick="goTo(5)">Report to webmaster</button>
+                <button style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:16px;font-size:14px;font-weight:700;cursor:pointer;" onclick="goTo(3)">Fix this page →</button>
+                <button style="background:#fff;color:#1a1a1a;border:1px solid #d8d4ce;border-radius:8px;padding:16px;font-size:14px;font-weight:600;cursor:pointer;" onclick="goTo(5)">Report to webmaster</button>
               </div>
             </div>
           </div>
 
           <div class="step-content" id="d-step-3">
-            <div class="detect-banner">
+            <div class="detect-overlay">
               <div class="detect-title">Broken table detected on this page</div>
-              <div style="font-size:12px;color:#92400e;">Re-extracting clinic data…</div>
+              <div class="detect-sub" style="font-size:12px;margin-top:4px;">Re-extracting clinic data into accessible format…</div>
               <div class="progress-track"><div class="progress-fill" id="d-progress"></div></div>
             </div>
-            <div style="padding:20px;">
+            <div class="s2-body">
               <div class="parse-log" id="d-log">
-                <div>&gt; Scanning page for table elements…</div>
-                <div>&gt; Extracting rows as structured plain text…</div>
-                <div style="color:var(--green)">&gt; Done. 18 clinic records extracted ✓</div>
+                <div class="log-line">&gt; Scanning page for table elements…</div>
+                <div class="log-line">&gt; Extracting rows as structured plain text…</div>
+                <div class="log-line" style="color:var(--green);font-weight:700;">&gt; Done. 18 clinic records extracted ✓</div>
               </div>
             </div>
           </div>
@@ -487,27 +631,25 @@
           <div class="step-content" id="d-step-4">
             <div class="result-header">
               <div class="result-title">After-Hours Clinics Near You</div>
-              <div class="result-sub">1 open now [Overnight] · Sorted by distance</div>
+              <div class="result-sub">1 open now [After-Hours/Overnight] · Sorted by status</div>
             </div>
-            
-            <div style="padding:16px;">
+            <div class="clinic-grid" id="d-clinics" style="padding:16px; gap:12px;">
               <div class="clinic-card" onclick="selectClinic(this,'d')">
                 <div class="clinic-name">Richmond 24-Hour Clinic</div>
                 <div class="clinic-meta">
                   <span class="clinic-hours">Open 24 hours</span>
                   <span class="clinic-dist">3.4 km</span>
                 </div>
-                <div style="margin-top:4px;font-size:11px;color:var(--muted);">321 No. 3 Rd, Richmond · 604-555-0400</div>
+                <div style="margin-top:6px; font-size:12px; color:var(--muted);">321 No. 3 Rd, Richmond · 604-555-0400</div>
                 <span class="open-tag">OPEN NOW · ~35 min wait</span>
               </div>
-              
               <div class="clinic-card closed">
                 <div class="clinic-name">Vancouver Care Clinic</div>
                 <div class="clinic-meta">
-                  <span class="clinic-hours closed">Closed · Opens 8 AM</span>
+                  <span class="clinic-hours closed">Closed · Opens 8:00 AM</span>
                   <span class="clinic-dist">2.1 km</span>
                 </div>
-                <div style="margin-top:4px;font-size:11px;color:var(--muted);">123 Main St, Vancouver</div>
+                <div style="margin-top:6px; font-size:12px; color:var(--muted);">123 Main St, Vancouver · 604-555-0100</div>
               </div>
             </div>
 
@@ -515,7 +657,7 @@
               <div class="register-panel-head">
                 <div>
                   <div class="register-panel-title">Pick an overnight time slot at <span id="register-clinic-name">Clinic</span></div>
-                  <div class="register-panel-sub" id="register-panel-sub">Reserving holds your spot in the queue.</div>
+                  <div class="register-panel-sub" id="register-panel-sub">Walk-in slots are first-come, but reserving holds your spot in the queue.</div>
                 </div>
                 <button class="register-close" onclick="closeRegisterPanel()">✕</button>
               </div>
@@ -523,61 +665,65 @@
               <div id="register-step-slot">
                 <div class="slot-grid" id="slot-grid"></div>
                 <div class="register-confirm-row">
-                  <button class="action-btn" style="width:100%;" id="register-next-btn" onclick="goToContactForm()" disabled>Continue &rarr;</button>
+                  <button class="register-confirm-btn" id="register-next-btn" onclick="goToContactForm()" disabled>Continue →</button>
                 </div>
               </div>
 
               <div id="register-step-contact" style="display:none;">
                 <div class="contact-form">
-                  <label class="contact-field">
-                    <span>Full name</span>
-                    <input type="text" id="contact-name" placeholder="Maria Santos" autocomplete="name">
-                  </label>
-                  <label class="contact-field">
-                    <span>Phone number</span>
-                    <input type="tel" id="contact-phone" placeholder="604-555-0123" autocomplete="tel">
-                  </label>
-                  <label class="contact-field">
-                    <span>Email</span>
-                    <input type="email" id="contact-email" placeholder="maria@example.com" autocomplete="email">
-                  </label>
+                  <label class="contact-field"><span>Full name</span><input type="text" id="contact-name" placeholder="Maria Santos"></label>
+                  <label class="contact-field"><span>Phone number</span><input type="tel" id="contact-phone" placeholder="604-555-0123"></label>
+                  <label class="contact-field"><span>Email</span><input type="email" id="contact-email" placeholder="maria@example.com"></label>
                 </div>
-                <div class="contact-error" id="contact-error"></div>
+                <div id="contact-error" class="contact-error"></div>
                 <div class="register-confirm-row">
-                  <button class="action-btn secondary" onclick="backToSlotPicker()">Back</button>
-                  <button class="action-btn" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
+                  <button class="register-back-btn" onclick="backToSlotPicker()">← Back</button>
+                  <button class="register-confirm-btn" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
                 </div>
               </div>
             </div>
 
             <div class="registration-confirmed" id="registration-confirmed">
-              <div style="flex:1;">
-                <div style="font-weight:700;font-size:14px;color:var(--blue);">Reservation confirmed</div>
-                <div id="rc-text" style="font-size:12px;margin-top:4px;"></div>
+              <div class="rc-icon">✓</div>
+              <div class="rc-body">
+                <div class="rc-title">Reservation confirmed</div>
+                <div class="rc-text" id="rc-text"></div>
                 <div class="rc-conf-number" id="rc-conf-number"></div>
               </div>
-              <button class="action-btn secondary" style="padding:8px 14px;font-size:12px;color:var(--blue);border-color:#b8d4f5;" onclick="openCancelConfirm()">Cancel</button>
+              <button class="rc-cancel" onclick="openCancelConfirm()">Cancel</button>
             </div>
           </div>
 
           <div class="step-content" id="d-step-5">
-            <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
-              <div style="background:var(--green-light);border:1px solid #a5d6a7;border-radius:8px;padding:16px;">
-                <div style="font-weight:700;color:var(--green);font-size:15px;">Rendering issue reported</div>
-                <div style="font-size:12px;color:#388e3c;margin-top:4px;">webmaster@healthbc.gov · Sent 12:42 AM</div>
+            <div class="report-wrap">
+              <div class="toast">
+                <span style="font-size:24px; color:var(--green);">✓</span>
+                <div>
+                  <div style="font-weight:700; color:var(--green); font-size:15px;">Rendering issue reported to webmaster</div>
+                  <div style="font-size:12px; color:#388e3c; margin-top:4px;">healthbc.gov · webmaster@healthbc.gov · Sent at 12:42 AM</div>
+                </div>
               </div>
-              <button class="action-btn" onclick="goTo(2)">
-                &larr; Return to layout tool
-              </button>
+              
+              <div style="margin-top: 8px; margin-bottom: 8px;">
+                <button style="width:100%; background:var(--blue); color:#fff; border:none; border-radius:8px; padding:14px; font-size:14px; font-weight:700; cursor:pointer;" onclick="goTo(2)">
+                  ← Return to layout tool workspace to fix page view
+                </button>
+              </div>
+
+              <div class="log-block">
+                <div class="log-entry err">[ERR] table.clinic-table: col overflow at 320px viewport</div>
+                <div class="log-entry">[INF] 18 clinic rows extracted as plain text</div>
+                <div class="log-entry ok">[INF] automated report dispatched ✓</div>
+              </div>
             </div>
           </div>
       </div>
 
       <div class="selected-banner" id="d-selected-banner">
-        <span id="d-selected-text" style="font-size:13px;">✓ Clinic selected</span>
+        <span id="d-selected-text">✓ Clinic selected</span>
         <div class="selected-actions">
-          <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot &rarr;</button>
-          <button class="report-issue-btn" onclick="goTo(5)">Report broken table &rarr;</button>
+          <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot →</button>
+          <button class="report-issue-btn" onclick="goTo(5)">Report broken table to webmaster →</button>
         </div>
       </div>
 
@@ -587,27 +733,27 @@
   <div class="modal-overlay" id="cancel-modal-overlay" onclick="if(event.target===this) closeCancelConfirm()">
     <div class="modal-box">
       <div class="modal-title">Cancel this reservation?</div>
-      <div class="modal-desc">This will release your time slot at the clinic and cannot be undone.</div>
+      <div class="modal-desc">This will release your time slot at <span id="cancel-modal-clinic">the clinic</span> and cannot be undone. You'll need to register again if you change your mind.</div>
       <div class="modal-actions">
-        <button class="action-btn secondary" onclick="closeCancelConfirm()">Keep</button>
-        <button class="action-btn" style="background:var(--red);" onclick="confirmCancelRegistration()">Cancel reservation</button>
+        <button class="btn-secondary" onclick="closeCancelConfirm()">Keep reservation</button>
+        <button class="btn-danger" onclick="confirmCancelRegistration()">Cancel reservation</button>
       </div>
     </div>
   </div>
 
   <div class="modal-overlay" id="details-modal-overlay">
     <div class="modal-box">
-      <div class="modal-title" style="color:var(--blue);">🎉 Reservation Held</div>
+      <div class="modal-title" style="color: var(--blue);">🎉 Reservation Held</div>
       <div class="modal-desc">
-        Your spot in the clinic line has been recorded. Please bring:
+        Your spot in the clinic line has been recorded. Please arrive 10 minutes early and remember to bring the following items to the clinic:
       </div>
       <ul class="modal-list">
-        <li><strong>1 piece of valid photo ID</strong></li>
-        <li><strong>Your confirmation number</strong> (<span id="modal-conf-display" style="font-family:var(--mono);"></span>)</li>
-        <li><strong>Your MSP card</strong></li>
+        <li><strong>1 piece of valid photo ID</strong> (e.g., Driver's License)</li>
+        <li><strong>Your confirmation number</strong> (<span id="modal-conf-display" style="font-family:var(--mono); font-weight:700;"></span>)</li>
+        <li><strong>Your MSP card</strong> (BC CareCard / BC Services Card)</li>
       </ul>
       <div class="modal-actions">
-        <button class="action-btn" style="width:100%;" onclick="closeDetailsModal()">Got it</button>
+        <button class="btn-primary" onclick="closeDetailsModal()">Got it</button>
       </div>
     </div>
   </div>
@@ -619,7 +765,6 @@
     let advanceTimer = null;
 
     const STORAGE_KEY = 'maria-clinic-registration';
-
     const CLINIC_SLOTS = {
       'Richmond 24-Hour Clinic': ['1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM', '3:15 AM', '4:00 AM'],
       'Vancouver Care Clinic': ['8:00 AM', '8:30 AM', '9:00 AM']
@@ -636,19 +781,15 @@
       localStorage.setItem(testKey, '1');
       localStorage.removeItem(testKey);
       storageAvailable = true;
-    } catch (e) {
-      storageAvailable = false;
-    }
+    } catch (e) {}
 
     function updateStep(step, fromBack) {
       clearTimeout(toastTimer);
       clearTimeout(advanceTimer);
       currentStep = step;
 
-      if (!fromBack) {
-        if (stepHistory[stepHistory.length - 1] !== step) {
-          stepHistory.push(step);
-        }
+      if (!fromBack && stepHistory[stepHistory.length - 1] !== step) {
+        stepHistory.push(step);
       }
       document.getElementById('back-bar').classList.toggle('show', stepHistory.length > 1);
 
@@ -671,9 +812,7 @@
       if (toast) toast.classList.remove('show');
 
       if (step === 1) {
-        toastTimer = setTimeout(() => {
-          if (toast) toast.classList.add('show');
-        }, 1400);
+        toastTimer = setTimeout(() => { if (toast) toast.classList.add('show'); }, 1000);
       }
 
       const dp = document.getElementById('d-progress');
@@ -684,18 +823,13 @@
           setTimeout(() => dp.classList.add('running'), 100);
         }
         advanceTimer = setTimeout(() => goTo(4), 2600);
-      } else if (dp) {
-        dp.classList.remove('running');
-        void dp.offsetWidth;
       }
       
-      // Cuộn lên đầu trang mỗi khi chuyển bước
-      document.getElementById('main-scroller').scrollTop = 0;
+      // Auto scroll to top natively
+      window.scrollTo(0, 0);
     }
 
-    function goTo(step) {
-      updateStep(step, false);
-    }
+    function goTo(step) { updateStep(step, false); }
 
     function goBack() {
       if (stepHistory.length > 1) {
@@ -716,20 +850,17 @@
       container.querySelectorAll('.clinic-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       
-      const nameEl = el.querySelector('.clinic-name');
-      const distEl = el.querySelector('.clinic-dist');
-      const name = nameEl ? nameEl.textContent : '';
-      const dist = distEl ? distEl.textContent : '';
-      const banner = document.getElementById(prefix + '-selected-banner');
-      const textEl = document.getElementById(prefix + '-selected-text');
+      const name = el.querySelector('.clinic-name').textContent;
+      const dist = el.querySelector('.clinic-dist').textContent;
       
-      if (banner && textEl) {
-        textEl.textContent = '✓ ' + name;
-        // CHỈ HIỆN BANNER NẾU PANEL ĐĂNG KÝ CHƯA MỞ
-        if (!document.getElementById('register-panel').classList.contains('show')) {
-          banner.classList.add('show');
-        }
+      const banner = document.getElementById(prefix + '-selected-banner');
+      document.getElementById(prefix + '-selected-text').textContent = '✓ ' + name + ' — ' + dist + ' away';
+      
+      // Ẩn banner thông minh nếu panel đang mở
+      if (!document.getElementById('register-panel').classList.contains('show')) {
+        banner.classList.add('show');
       }
+      
       selectedClinicName = name;
       selectedClinicMeta = dist;
       closeRegisterPanel();
@@ -737,11 +868,8 @@
 
     function openRegisterPanel() {
       const panel = document.getElementById('register-panel');
-      const nameSpan = document.getElementById('register-clinic-name');
+      document.getElementById('register-clinic-name').textContent = selectedClinicName;
       const grid = document.getElementById('slot-grid');
-      if (!panel || !grid) return;
-
-      nameSpan.textContent = selectedClinicName || 'this clinic';
       const slots = CLINIC_SLOTS[selectedClinicName] || ['1:00 AM', '2:00 AM', '3:00 AM'];
       pickedSlot = null;
 
@@ -755,37 +883,32 @@
         grid.appendChild(btn);
       });
 
-      // TẮT BANNER FOOTER ĐỂ TRÁNH BỊ ĐÈ TRÊN IPHONE SE
+      // TẮT CHẾT BANNER ĐỂ NHƯỜNG CHỖ CHO FORM TRÊN IPHONE SE
       document.getElementById('d-selected-banner').classList.remove('show');
 
       showSlotStep();
       document.getElementById('register-next-btn').disabled = true;
       panel.classList.add('show');
-      
+
       setTimeout(() => {
         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 50);
     }
 
-    function closeRegisterPanel() {
-      const panel = document.getElementById('register-panel');
-      if (panel) panel.classList.remove('show');
-      showSlotStep();
-      
-      // Bật lại banner nếu đã chọn clinic và chưa có đăng ký
+    function closeRegisterPanel() { 
+      document.getElementById('register-panel').classList.remove('show');
       if (selectedClinicName && !getSavedRegistration()) {
-        document.getElementById('d-selected-banner').classList.add('show');
+         document.getElementById('d-selected-banner').classList.add('show');
       }
     }
 
     function showSlotStep() {
       document.getElementById('register-step-slot').style.display = '';
       document.getElementById('register-step-contact').style.display = 'none';
-      document.getElementById('contact-error').textContent = '';
     }
 
     function pickSlot(btn, time) {
-      document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('picked'));
+      document.querySelectorAll('.slot-grid .slot-btn').forEach(b => b.classList.remove('picked'));
       btn.classList.add('picked');
       pickedSlot = time;
       document.getElementById('register-next-btn').disabled = false;
@@ -802,9 +925,7 @@
       }, 50);
     }
 
-    function backToSlotPicker() {
-      showSlotStep();
-    }
+    function backToSlotPicker() { showSlotStep(); }
 
     function generateConfirmationNumber() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -814,14 +935,10 @@
     }
 
     function confirmRegistration() {
-      const nameEl = document.getElementById('contact-name');
-      const phoneEl = document.getElementById('contact-phone');
-      const emailEl = document.getElementById('contact-email');
+      const name = document.getElementById('contact-name').value.trim();
+      const phone = document.getElementById('contact-phone').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
       const errorEl = document.getElementById('contact-error');
-
-      const name = nameEl.value.trim();
-      const phone = phoneEl.value.trim();
-      const email = emailEl.value.trim();
 
       if (!name || !phone || !email) {
         errorEl.textContent = 'Please fill in your name, phone number, and email.';
@@ -835,20 +952,10 @@
       errorEl.textContent = '';
 
       const confNum = generateConfirmationNumber();
-      const registration = {
-        clinic: selectedClinicName,
-        meta: selectedClinicMeta,
-        time: pickedSlot,
-        name: name,
-        phone: phone,
-        email: email,
-        confirmationNumber: confNum,
-        savedAt: new Date().toISOString()
-      };
+      const registration = { clinic: selectedClinicName, time: pickedSlot, confirmationNumber: confNum };
 
       if (storageAvailable) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(registration)); } 
-        catch (e) { console.warn(e); }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registration));
       } else {
         window.__sessionRegistration = registration;
       }
@@ -861,53 +968,42 @@
     }
 
     function closeDetailsModal() { document.getElementById('details-modal-overlay').classList.remove('show'); }
-    function openCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.add('show'); }
+    function openCancelConfirm() { 
+      const saved = getSavedRegistration();
+      if(saved) document.getElementById('cancel-modal-clinic').textContent = saved.clinic;
+      document.getElementById('cancel-modal-overlay').classList.add('show'); 
+    }
     function closeCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.remove('show'); }
 
     function confirmCancelRegistration() {
-      if (storageAvailable) {
-        try { localStorage.removeItem(STORAGE_KEY); } 
-        catch (e) { console.warn(e); }
-      }
+      if (storageAvailable) localStorage.removeItem(STORAGE_KEY);
       window.__sessionRegistration = null;
       closeCancelConfirm();
       renderSavedRegistration();
     }
 
     function getSavedRegistration() {
-      if (storageAvailable) {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? JSON.parse(raw) : null;
-        } catch (e) { return null; }
-      }
+      if (storageAvailable) return JSON.parse(localStorage.getItem(STORAGE_KEY));
       return window.__sessionRegistration || null;
     }
 
     function renderSavedRegistration() {
       const confirmedBox = document.getElementById('registration-confirmed');
-      const rcText = document.getElementById('rc-text');
-      const rcConfNumber = document.getElementById('rc-conf-number');
-      if (!confirmedBox || !rcText) return;
-
       const saved = getSavedRegistration();
 
-      if (saved && saved.clinic && saved.time) {
-        rcText.textContent = saved.clinic + ' — today at ' + saved.time;
-        if (rcConfNumber) {
-          rcConfNumber.textContent = saved.confirmationNumber ? 'Confirmation #' + saved.confirmationNumber : '';
-        }
+      if (saved && saved.clinic) {
+        document.getElementById('rc-text').textContent = saved.clinic + ' — today at ' + saved.time;
+        document.getElementById('rc-conf-number').textContent = 'Confirmation #' + saved.confirmationNumber;
         confirmedBox.classList.add('show');
+        document.getElementById('d-selected-banner').classList.remove('show');
       } else {
         confirmedBox.classList.remove('show');
       }
     }
 
     renderSavedRegistration();
-    const existingRegistration = getSavedRegistration();
-    if (existingRegistration) {
-      stepHistory = [0, 4];
-      updateStep(4, true);
+    if (getSavedRegistration()) {
+      stepHistory = [0, 4]; updateStep(4, true);
     } else {
       updateStep(0, true);
     }
