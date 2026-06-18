@@ -65,31 +65,6 @@
     }
     .back-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-    /* ── Device toggle ───────────────────── */
-    .device-toggle {
-      display: flex;
-      background: #333;
-      border-radius: 6px;
-      padding: 3px;
-      gap: 2px;
-    }
-    .device-btn {
-      background: none;
-      border: none;
-      color: #888;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background .2s, color .2s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .device-btn.active { background: #fff; color: #1a1a1a; }
-    .device-btn svg { width: 12px; height: 12px; }
-
     /* ── Main stage ──────────────────────── */
     .stage {
       flex: 1;
@@ -98,7 +73,7 @@
       overflow: hidden;
     }
 
-    /* App surface — fills the viewport like a real deployed app */
+    /* App surface */
     .browser-frame {
       flex: 1;
       display: flex;
@@ -112,6 +87,7 @@
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
 
     /* ── Real-site interaction affordances ── */
@@ -143,9 +119,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-    }
-    @media (max-width: 600px) {
-      .panel-grid { grid-template-columns: 1fr; flex: 0 1 auto; gap: 24px; }
     }
 
     .a11y-toast {
@@ -183,24 +156,6 @@
     .a11y-toast-body { flex: 1; min-width: 0; }
     .a11y-toast-title { font-size: 15px; font-weight: 800; letter-spacing: -.01em; }
     .a11y-toast-sub { font-size: 12.5px; opacity: .85; margin-top: 2px; }
-    .a11y-toast-cta {
-      flex-shrink: 0;
-      background: rgba(255,255,255,.18);
-      border: 1.5px solid rgba(255,255,255,.4);
-      border-radius: 7px;
-      padding: 9px 16px;
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .a11y-toast:hover .a11y-toast-cta { background: rgba(255,255,255,.28); }
-    @media (max-width: 560px) {
-      .a11y-toast { padding: 12px 16px; gap: 12px; }
-      .a11y-toast-icon { width: 34px; height: 34px; font-size: 17px; }
-      .a11y-toast-title { font-size: 13px; }
-      .a11y-toast-sub { font-size: 11px; }
-      .a11y-toast-cta { display: none; }
-    }
 
     /* ── Step content panels ─────────────── */
     .step-content {
@@ -212,621 +167,137 @@
     }
     .step-content.visible { display: flex; }
 
-    @keyframes fadeIn { from { transform: translateY(6px); } to { transform: translateY(0); } }
-
-    /* ── Mobile: iOS Safari address bar ── */
-    .m-addrbar {
-      background: #f2f2f7;
-      padding: 7px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-      border-bottom: .5px solid rgba(0,0,0,.1);
-    }
-    .m-url-pill {
-      flex: 1;
-      background: #e5e5ea;
-      border-radius: 10px;
-      padding: 7px 12px;
-      font-size: 12px;
-      color: #3c3c43;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      font-weight: 500;
-    }
-    .m-url-lock { font-size: 10px; opacity: .55; }
-    /* ── Mobile Step 1: site header ── */
-    .m-site-header {
-      background: #003366;
-      color: #fff;
-      padding: 11px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-    .m-site-logo { font-size: 13px; font-weight: 800; }
-    .m-site-logo span { color: #ffd700; }
-    .m-hamburger { font-size: 16px; opacity: .8; }
-    .m-error-bar {
-      background: #fff3cd;
-      border-bottom: 1px solid #ffc107;
-      padding: 7px 14px;
-      font-size: 11px;
-      color: #7a5a00;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    .m-broken-wrap { flex: 1; overflow: hidden; position: relative; }
-    .m-broken-table { width: 560px; border-collapse: collapse; font-size: 11px; }
-    .m-broken-table th {
-      background: #e8e8e3; padding: 6px 8px;
-      text-align: left; border: 1px solid #ccc;
-      white-space: nowrap; font-size: 10px;
-    }
-    .m-broken-table td { padding: 5px 7px; border: 1px solid #e8e8e3; white-space: nowrap; }
-    .m-bad-row td { background: #fde8e8 !important; }
-    .m-cell-red { color: var(--red); }
-    .m-cell-dim { color: #bbb; }
-    .m-cut-fade {
-      position: absolute;
-      right: 0; top: 0; bottom: 0; width: 40px;
-      background: linear-gradient(to right, transparent, rgba(255,200,200,.95));
-      pointer-events: none;
-      display: flex; align-items: center; justify-content: flex-end;
-      padding-right: 5px; font-size: 9px; color: var(--red); font-weight: 700;
-    }
-    .m-frustrated {
-      background: #f5f5f0; border-top: 1px solid #e8e8e3;
-      padding: 8px 14px; font-size: 11px; color: #999;
-      flex-shrink: 0; font-style: italic;
-    }
-    /* ── Mobile Step 2: detection ── */
-    .m-detect-banner {
-      background: var(--amber-light);
-      border-bottom: 2px solid #fcd34d;
-      padding: 12px 14px;
-      flex-shrink: 0;
-    }
-    .m-detect-top { display: flex; align-items: flex-start; gap: 10px; }
-    .m-detect-icon { font-size: 18px; line-height: 1.1; }
-    .m-detect-title { font-size: 13px; font-weight: 700; color: var(--amber); }
-    .m-detect-sub { font-size: 11px; color: #92400e; margin-top: 2px; }
-    .m-prog-track { height: 4px; background: #fde68a; border-radius: 2px; margin-top: 10px; overflow: hidden; }
-    .m-skel-body { flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-    .m-skel-row { display: flex; justify-content: space-between; gap: 8px; }
-    .m-parse-log {
-      font-family: var(--mono); font-size: 10px;
-      color: #888; margin-top: 6px;
-      display: flex; flex-direction: column; gap: 3px;
-    }
-    /* ── Mobile Step 3: clean result ── */
-    .m-result-hdr {
-      background: var(--blue); color: #fff;
-      padding: 14px 16px; flex-shrink: 0;
-    }
-    .m-result-title { font-size: 16px; font-weight: 700; }
-    .m-result-sub { font-size: 11px; opacity: .75; margin-top: 3px; }
-    .m-clinic-list {
-      flex: 1; overflow-y: auto;
-      padding: 10px; display: flex;
-      flex-direction: column; gap: 8px;
-      background: #f2f2f7;
-    }
-    .m-clinic-card {
-      background: #fff; border-radius: 12px;
-      padding: 13px 14px; cursor: pointer;
-      transition: transform .15s, opacity .15s;
-      box-shadow: 0 1px 4px rgba(0,0,0,.07);
-    }
-    .m-clinic-card:hover { transform: scale(.98); }
-    .m-clinic-card.selected { outline: 2px solid var(--blue); background: var(--blue-light); }
-    .m-clinic-closed { opacity: .45; cursor: default; }
-    .m-clinic-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .m-clinic-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
-    .m-open-badge {
-      background: var(--green-light); color: var(--green);
-      font-size: 10px; font-weight: 700;
-      padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
-    }
-    .m-closed-badge {
-      background: #f0f0f0; color: #999;
-      font-size: 10px; font-weight: 700;
-      padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
-    }
-    .m-clinic-meta { display: flex; gap: 6px; margin-top: 5px; align-items: center; }
-    .m-clinic-hrs { font-size: 12px; color: var(--green); }
-    .m-clinic-dist { font-size: 12px; color: var(--muted); }
-    .m-clinic-dot { font-size: 9px; color: #ddd; }
-    /* ── Mobile Step 4: report ── */
-    .m-rpt-body {
-      flex: 1; padding: 12px;
-      display: flex; flex-direction: column;
-      gap: 10px; background: #f2f2f7; overflow-y: auto;
-    }
-    .m-toast {
-      background: #fff; border-radius: 12px;
-      padding: 13px 14px; display: flex;
-      align-items: center; gap: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.07);
-      animation: slideDown .4s ease;
-    }
-    .m-toast-check {
-      width: 34px; height: 34px; background: var(--green);
-      border-radius: 50%; color: #fff; font-size: 16px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .m-toast-title { font-size: 14px; font-weight: 700; color: #1a1a1a; }
-    .m-toast-sub { font-size: 11px; color: #666; margin-top: 2px; }
-    .m-rpt-card {
-      background: #fff; border-radius: 12px;
-      overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07);
-    }
-    .m-rpt-head {
-      background: #f5f5f0; border-bottom: .5px solid #e0e0da;
-      padding: 9px 14px; font-size: 11px; font-weight: 700; color: #444;
-      display: flex; align-items: center; gap: 7px;
-    }
-    .m-rpt-fields { padding: 10px 14px; display: flex; flex-direction: column; gap: 5px; }
-    .m-rpt-row { font-size: 12px; color: #555; }
-    .m-rpt-row strong { color: #1a1a1a; }
-    .m-sent {
-      background: var(--green-light); color: var(--green);
-      font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
-    }
-    .m-log { font-family: var(--mono); font-size: 10px; display: flex; flex-direction: column; gap: 3px; }
-    .m-log-err { background: #fde8e8; color: var(--red); padding: 4px 10px; border-radius: 6px; }
-    .m-log-inf { background: #f0f0ec; color: #666; padding: 4px 10px; border-radius: 6px; }
-    .m-log-ok  { background: var(--green-light); color: var(--green); padding: 4px 10px; border-radius: 6px; }
-
-    /* ── Step 1: Broken table ────────────── */
-    .s1-content { padding: 10px; flex: 1; overflow: hidden; }
-    .bc-health-header {
-      background: #003366;
-      color: #fff;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .bc-logo { font-size: 9px; font-weight: 800; letter-spacing: -.01em; }
-    .bc-logo span { color: #ffd700; }
-    .bc-nav { font-size: 7px; opacity: .7; margin-left: auto; }
-    .page-heading { font-size: 11px; font-weight: 700; padding: 8px 10px 4px; color: #003366; }
+    /* ── Broken Table View ────────────────── */
+    .page-heading { font-size: 16px; font-weight: 700; padding: 12px 16px 4px; color: #003366; }
     .broken-badge {
-      display: flex; align-items: center; gap: 4px;
+      display: inline-flex; align-items: center; gap: 4px;
       background: #fde8e8; border: 1px solid #f5a0a0;
-      border-radius: 4px; padding: 4px 8px; margin: 6px 10px;
-      font-size: 8px; color: var(--red); font-weight: 600;
+      border-radius: 4px; padding: 6px 12px; margin: 8px 16px;
+      font-size: 11px; color: var(--red); font-weight: 600;
     }
+    .table-container { padding: 0 16px; overflow-x: auto; }
+    .btable { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    .btable th { background: #e8e8e3; padding: 8px; font-weight: 600; border: 1px solid #ccc; }
+    .btable td { padding: 7px 8px; border: 1px solid #e0e0da; }
+    .overlap-row td { background: #fde8e8 !important; }
 
-    /* Desktop step 1 */
-    .d-s1 .bc-health-header { padding: 12px 20px; }
-    .d-s1 .bc-logo { font-size: 13px; }
-    .d-s1 .page-heading { font-size: 16px; padding: 16px 20px 8px; }
-    .d-s1 .btable { font-size: 11px; }
-    .d-s1 .btable th { padding: 6px 8px; }
-    .d-s1 .btable td { padding: 5px 6px; }
-    .d-s1 .broken-table-wrap { padding: 0 20px; overflow-x: auto; }
-    .d-s1 .broken-badge { font-size: 11px; margin: 10px 20px; padding: 7px 12px; }
-    .d-s1 .s1-content { padding: 0; }
-
-    /* ── Step 2: Detection ───────────────── */
-    .detect-overlay {
-      background: var(--amber-light);
-      border-bottom: 2px solid #fcd34d;
-      padding: 8px 10px;
-      flex-shrink: 0;
-    }
-    .detect-row { display: flex; align-items: center; gap: 6px; }
-    .detect-icon { font-size: 12px; }
-    .detect-text { font-size: 8.5px; font-weight: 700; color: var(--amber); flex: 1; }
-    .detect-sub { font-size: 7px; color: #92400e; margin-top: 2px; }
-    .progress-track { height: 4px; background: #fde68a; border-radius: 2px; margin-top: 6px; overflow: hidden; }
-    .progress-fill {
-      height: 100%; width: 0%; background: var(--amber);
-      border-radius: 2px; transition: width 2.5s ease;
-    }
-    .progress-fill.running { width: 85%; }
-    .s2-body { flex: 1; padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
-    .skel { height: 6px; background: #e8e8e3; border-radius: 3px; }
-    .skel.pulse { animation: pulse 1.4s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    .parse-log { font-family: var(--mono); font-size: 7px; color: #888; margin-top: 8px; display: flex; flex-direction: column; gap: 2px; }
-    .log-line { opacity: 0; animation: logFade .3s ease forwards; }
-    .log-line:nth-child(1) { animation-delay: .3s; }
-    .log-line:nth-child(2) { animation-delay: .9s; }
-    .log-line:nth-child(3) { animation-delay: 1.6s; }
-    .log-line:nth-child(4) { animation-delay: 2.2s; }
-    @keyframes logFade { to { opacity: 1; } }
-
-    /* Desktop step 2 */
-    .d-s2 .detect-overlay { padding: 14px 20px; }
-    .d-s2 .detect-text { font-size: 13px; }
-    .d-s2 .detect-sub { font-size: 10px; }
-    .d-s2 .s2-body { padding: 16px 20px; gap: 8px; }
-    .d-s2 .skel { height: 10px; }
-    .d-s2 .parse-log { font-size: 10px; gap: 4px; }
-
-    /* ── Step 3: Clean result ────────────── */
+    /* ── Clinic Result Step ── */
     .result-header {
       background: var(--blue);
       color: #fff;
       padding: 10px 16px;
       flex-shrink: 0;
     }
-    .result-title { font-size: 15px; font-weight: 700; }
-    .result-sub { font-size: 10.5px; opacity: .75; margin-top: 1px; }
-    .clinic-list { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .result-title { font-size: 14px; font-weight: 700; }
+    .result-sub { font-size: 11px; opacity: .75; margin-top: 2px; }
     .clinic-card {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 8px 10px;
+      padding: 10px 12px;
       cursor: pointer;
-      transition: box-shadow .2s, border-color .2s, transform .15s;
+      transition: all 0.15s ease;
     }
-    .clinic-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.1); border-color: var(--blue); }
-    .clinic-card.selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 2px rgba(26,92,168,.2); }
+    .clinic-card.selected { border-color: var(--blue); background: var(--blue-light); }
     .clinic-card.closed { opacity: .5; cursor: default; }
     .clinic-name { font-size: 13px; font-weight: 700; }
-    .clinic-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-    .clinic-hours { font-size: 11px; color: var(--green); }
+    .clinic-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 11px; }
+    .clinic-hours { color: var(--green); }
     .clinic-hours.closed { color: var(--red); }
-    .clinic-dist { font-size: 11px; color: var(--muted); }
+    .clinic-dist { color: var(--muted); }
     .open-tag {
       font-size: 9px; font-weight: 700;
       background: var(--green-light); color: var(--green);
-      padding: 1px 5px; border-radius: 2px;
-      margin-top: 3px; display: inline-block;
+      padding: 2px 6px; border-radius: 4px;
+      margin-top: 4px; display: inline-block;
     }
+
+    /* FIX CỐ ĐỊNH BANNER FOOTER */
     .selected-banner {
       background: var(--green-light);
       border-top: 1px solid #a5d6a7;
-      padding: 10px 20px;
+      padding: 12px 16px;
       font-size: 12px;
       color: var(--green);
       font-weight: 600;
       display: none;
-      flex-shrink: 0;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 90;
+      bottom: 0; left: 0; right: 0;
+      z-index: 99;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
     }
     .selected-banner.show { display: flex; }
     .selected-actions { display: flex; gap: 8px; flex-shrink: 0; }
     @media (max-width: 480px) {
-      .selected-banner.show { flex-direction: column; align-items: stretch; }
-      .selected-actions { flex-direction: column; }
-      .report-issue-btn, .register-btn { width: 100%; text-align: center; }
+      .selected-banner.show { flex-direction: column; align-items: stretch; gap: 8px; }
+      .selected-actions { flex-direction: column; gap: 6px; }
     }
-    .report-issue-btn {
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      flex-shrink: 0;
-      white-space: nowrap;
+    
+    .report-issue-btn, .register-btn, .action-btn {
+      background: var(--blue); color: #fff; border: none; border-radius: 6px;
+      padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center;
     }
-    .report-issue-btn:hover { background: #333; }
-    .register-btn {
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-    .register-btn:hover { background: #154a87; }
+    .report-issue-btn { background: #1a1a1a; }
+    .action-btn.secondary { background: #fff; color: #1a1a1a; border: 1px solid #d8d4ce; }
 
-    /* ── Time-slot registration panel ─────── */
+    /* FIX LỖI ẨN NÚT MOBILE: BIẾN FORM ĐĂNG KÝ THÀNH FULL SCREEN TRÊN MOBILE */
     .register-panel {
       display: none;
       flex-direction: column;
-      gap: 10px;
-      padding: 14px 20px;
+      gap: 12px;
+      padding: 16px;
       background: #fff;
       border-top: 1px solid var(--border);
+      position: fixed;
+      inset: 0; /* Đè toàn màn hình */
+      z-index: 150;
+      overflow-y: auto;
     }
     .register-panel.show { display: flex; }
-    .register-panel-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .register-panel-title { font-size: 14px; font-weight: 700; color: var(--text); }
-    .register-panel-sub { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
-    .register-close {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 14px;
-      cursor: pointer;
-      flex-shrink: 0;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .register-close:hover { background: #f0f0ec; color: var(--text); }
-    .slot-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-    @media (max-width: 600px) {
-      .slot-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    .register-panel-head { display: flex; justify-content: space-between; align-items: flex-start; }
+    .register-panel-title { font-size: 14px; font-weight: 700; }
+    .register-panel-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+    .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
     .slot-btn {
-      background: #fff;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 8px;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-      text-align: center;
-      transition: border-color .15s, background .15s;
+      background: #fff; border: 1.5px solid var(--border); border-radius: 6px;
+      padding: 10px 4px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center;
     }
-    .slot-btn:hover { border-color: var(--blue); background: var(--blue-light); }
     .slot-btn.picked { border-color: var(--blue); background: var(--blue); color: #fff; }
-    .register-confirm-row { display: flex; justify-content: flex-end; }
-    .register-confirm-btn {
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 20px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .register-confirm-btn:hover { background: #154a87; }
-    .register-confirm-btn:disabled { background: #ccc; cursor: default; }
-    .register-back-btn {
-      background: none;
-      color: var(--text);
-      border: 1.5px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 18px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .register-back-btn:hover { background: #f5f5f0; }
 
-    /* ── Contact details form ─────────────── */
-    .contact-form {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 700px) {
-      .contact-form { grid-template-columns: 1fr; }
-    }
-    .contact-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: #555;
-    }
-    .contact-field input {
-      border: 1.5px solid var(--border);
-      border-radius: 7px;
-      padding: 8px 11px;
-      font-size: 13px;
-      font-family: var(--font);
-      color: var(--text);
-    }
-    .contact-field input:focus { outline: none; border-color: var(--blue); }
-    .contact-error {
-      color: var(--red);
-      font-size: 11.5px;
-      font-weight: 600;
-      margin-top: 10px;
-      min-height: 1em;
-    }
+    .contact-form { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+    .contact-field { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; font-weight: 600; color: #555; }
+    .contact-field input { border: 1.5px solid var(--border); border-radius: 6px; padding: 10px; font-size: 13px; }
 
-    /* ── Confirmed registration banner ────── */
+    /* Confirmed banner */
     .registration-confirmed {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 20px;
-      background: var(--blue-light);
-      border-top: 1px solid #b8d4f5;
+      display: none; align-items: center; gap: 12px; padding: 12px 16px;
+      background: var(--blue-light); border-top: 1px solid #b8d4f5;
     }
     .registration-confirmed.show { display: flex; }
-    .rc-icon {
-      width: 26px; height: 26px; flex-shrink: 0;
-      background: var(--blue); color: #fff;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 900;
-    }
-    .rc-body { flex: 1; }
-    .rc-title { font-size: 13px; font-weight: 700; color: var(--blue); }
-    .rc-text { font-size: 11.5px; color: #1a1a1a; margin-top: 2px; }
-    .rc-conf-number {
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--blue);
-      background: #fff;
-      border: 1px solid #b8d4f5;
-      border-radius: 5px;
-      padding: 3px 8px;
-      display: inline-block;
-      margin-top: 6px;
-      letter-spacing: .04em;
-    }
-    .rc-cancel {
-      background: none;
-      border: 1.5px solid #b8d4f5;
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--blue);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .rc-cancel:hover { background: #fff; }
+    .rc-conf-number { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--blue); background: #fff; border: 1px solid #b8d4f5; border-radius: 5px; padding: 2px 6px; display: inline-block; margin-top: 4px; }
 
-    /* ── Cancel confirmation modal ────────── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(20,20,20,.5);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px 26px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 24px 60px rgba(0,0,0,.3);
-    }
-    .modal-title { font-size: 16.5px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .modal-desc { font-size: 13px; color: #555; line-height: 1.5; }
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 22px;
-    }
-    @media (max-width: 420px) {
-      .modal-actions { flex-direction: column-reverse; }
-    }
-    .modal-btn-secondary {
-      flex: 1;
-      background: none;
-      border: 1.5px solid var(--border);
-      border-radius: 7px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-    }
-    .modal-btn-secondary:hover { background: #f5f5f0; }
-    .modal-btn-danger {
-      flex: 1;
-      background: var(--red);
-      border: none;
-      border-radius: 7px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-    }
-    .modal-btn-danger:hover { background: #a5311f; }
-
-    /* Desktop step 3 */
-    .d-s3 .result-header { padding: 10px 16px; }
-    .d-s3 .result-title { font-size: 15px; }
-    .d-s3 .result-sub { font-size: 10.5px; }
-    .d-s3 .clinic-grid { padding: 12px; gap: 8px; }
-    .d-s3 .clinic-name { font-size: 13px; }
-    .d-s3 .clinic-hours, .d-s3 .clinic-dist { font-size: 11px; }
-    .d-s3 .open-tag { font-size: 9px; }
-    .d-s3 .selected-banner { font-size: 11px; padding: 10px 16px; }
-
-    /* ── Step 4: Error report ────────────── */
-    .report-wrap { flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-    .toast {
-      background: var(--green-light);
-      border: 1px solid #a5d6a7;
-      border-radius: 6px;
-      padding: 8px 10px;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      animation: slideDown .4s ease;
-    }
-    @keyframes slideDown { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }
-    .toast-icon { font-size: 14px; flex-shrink: 0; }
-    .toast-text { font-size: 8.5px; font-weight: 700; color: var(--green); }
-    .toast-sub { font-size: 7.5px; color: #388e3c; margin-top: 1px; }
-    .report-card-2 {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .report-card-head {
-      background: #f5f5f0;
-      border-bottom: 1px solid var(--border);
-      padding: 5px 10px;
-      font-size: 8px;
-      font-weight: 700;
-      color: #444;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
-    .report-fields { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
-    .report-field { font-size: 7.5px; color: #555; }
-    .report-field strong { color: #1a1a1a; }
-    .sent-chip {
-      background: var(--green-light); color: var(--green);
-      font-size: 7px; font-weight: 700;
-      padding: 2px 7px; border-radius: 12px;
-      margin-top: 2px; display: inline-flex; align-items: center; gap: 3px;
-    }
+    /* Step 5 */
+    .report-wrap { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .toast { background: var(--green-light); border: 1px solid #a5d6a7; border-radius: 6px; padding: 10px 14px; display: flex; gap: 8px; }
     .log-block { font-family: var(--mono); font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
     .log-entry { background: #f0f0ec; padding: 4px 12px; border-radius: 6px; color: #666; }
     .log-entry.err { background: #fde8e8; color: var(--red); }
     .log-entry.ok { background: var(--green-light); color: var(--green); }
 
-    /* Desktop step 4 */
-    .d-s4 .report-wrap { padding: 16px 20px; gap: 12px; }
-    .d-s4 .toast-text { font-size: 13px; }
-    .d-s4 .toast-sub { font-size: 11px; }
-    .d-s4 .report-card-head { font-size: 12px; padding: 8px 14px; }
-    .d-s4 .report-fields { padding: 12px 14px; gap: 6px; }
-    .d-s4 .report-field { font-size: 11px; }
-    .d-s4 .sent-chip { font-size: 10px; padding: 3px 10px; }
-    .d-s4 .log-block { font-size: 10px; gap: 3px; }
-    .d-s4 .log-entry { padding: 3px 10px; }
+    /* Modals */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(20,20,20,.5); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: 12px; padding: 20px; max-width: 360px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .modal-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .modal-desc { font-size: 12.5px; color: #555; line-height: 1.4; }
+    .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
 
-    /* Custom layout padding fix - extended safety clearance zone */
-    .has-banner-padding {
-      padding-bottom: 140px !important;
-    }
-    .modal-list { margin-left: 20px; margin-top: 8px; margin-bottom: 8px; font-size: 13px; color: #333; }
-    .modal-list li { margin-bottom: 6px; }
+    /* Đệm khoảng trống ở bước 4 để không bị đè bởi banner footer */
+    .has-banner-padding { padding-bottom: 120px !important; }
   </style>
 </head>
 <body>
@@ -840,61 +311,49 @@
         </button>
       </div>
       
-      <div class="browser-body" id="browser-body-scroller">
+      <div class="browser-body">
           <div class="step-content visible" id="d-step-0">
-            <div class="bc-health-header">
-              <span class="bc-logo"><span>BC</span> Health Services</span>
-              <span class="bc-nav">Home &nbsp;·&nbsp; Find a Clinic &nbsp;·&nbsp; Doctors &nbsp;·&nbsp; Immunizations &nbsp;·&nbsp; My Health</span>
+            <div class="bc-health-header" style="padding:10px 16px;">
+              <span class="bc-logo" style="font-size:14px;"><span>BC</span> Health Services</span>
             </div>
-            <div class="hero-banner">
-              <div class="hero-title">BC Health Services Portal</div>
-              <div class="hero-sub">Connecting British Columbians with healthcare resources, clinics, and providers across the province.</div>
-              <div class="search-mock">
-                <span>Search clinics, services, health topics…</span>
-              </div>
+            <div class="hero-banner" style="padding:16px;">
+              <div class="hero-title" style="font-size:18px;">BC Health Services Portal</div>
+              <div class="hero-sub" style="font-size:11.5px;">Connecting British Columbians with healthcare resources.</div>
             </div>
             <div class="section-label">Services</div>
-            <div class="services-grid">
+            <div class="services-grid" style="padding: 0 16px 16px;">
               <div class="service-tile" onclick="goTo(1)">
                 <div class="tile-icon" style="background:#e8f0fb; color:#1a5ca8;">+</div>
-                <div style="font-size:12px; font-weight:700; color:#1a1a1a; margin-bottom:3px;">After-Hours Clinics</div>
-                <div style="font-size:10px; color:#888; line-height:1.4;">Find open clinics near you</div>
+                <div style="font-size:12px; font-weight:700;">After-Hours Clinics</div>
               </div>
               <div class="service-tile disabled">
                 <div class="tile-icon" style="background:#e8f5e9; color:#2e7d32;">Rx</div>
-                <div style="font-size:12px; font-weight:700; color:#1a1a1a; margin-bottom:3px;">Find a Doctor</div>
-                <div style="font-size:10px; color:#888; line-height:1.4;">Family &amp; specialist care</div>
+                <div style="font-size:12px; font-weight:700;">Find a Doctor</div>
               </div>
             </div>
           </div>
 
           <div class="step-content" id="d-step-1">
-            <div class="bc-health-header">
-              <span class="bc-logo"><span>BC</span> Health Services</span>
+            <div class="bc-health-header" style="padding:10px 16px;">
+              <span class="bc-logo" style="font-size:14px;"><span>BC</span> Health Services</span>
             </div>
             <div class="page-heading">After-Hours Clinics</div>
-            <div class="broken-badge">⚠ Some columns may not display correctly on this browser</div>
+            <div class="broken-badge">⚠ Layout view error on mobile devices</div>
             <div class="table-container">
               <table class="btable">
                 <thead>
-                  <tr>
-                    <th>Clinic Name</th><th>Hours of Operation</th><th>Phone Number</th><th>Address</th><th>Wait Time</th>
-                  </tr>
+                  <tr><th>Clinic Name</th><th>Hours</th><th>Phone</th></tr>
                 </thead>
                 <tbody>
                   <tr class="overlap-row">
                     <td>Richmond 24-Hour Clinic</td>
                     <td style="color:var(--red);">Open 24 Hours ████████</td>
                     <td>604-555-0400</td>
-                    <td>321 No. 3 Rd, Richmond</td>
-                    <td>~35 min</td>
                   </tr>
                   <tr class="overlap-row">
                     <td>Vancouver Care Clinic</td>
-                    <td style="color:var(--red);">Mon–Fri 8am–11pm [Closed] ████████</td>
+                    <td style="color:var(--red);">Closed ████████</td>
                     <td>604-555-0100</td>
-                    <td>123 Main St, Vancouver</td>
-                    <td>Closed</td>
                   </tr>
                 </tbody>
               </table>
@@ -903,47 +362,39 @@
             <div class="a11y-toast" id="a11y-toast" onclick="goTo(2)">
               <div class="a11y-toast-icon">!</div>
               <div>
-                <div class="a11y-toast-title">Accessibility issue detected on this page</div>
-                <div class="a11y-toast-sub">This table is broken on your screen. We can fix it for you.</div>
+                <div class="a11y-toast-title">Accessibility issue detected</div>
+                <div class="a11y-toast-sub">Click here to reformat into a clean mobile layout.</div>
               </div>
             </div>
           </div>
 
           <div class="step-content" id="d-step-2">
-            <div class="tool-header">
-              <div style="font-size:14px; font-weight:700;">Accessibility Check-up Tool</div>
+            <div class="tool-header" style="padding:10px 16px;">
+              <div style="font-size:13px; font-weight:700;">Accessibility Check-up Tool</div>
               <div class="tool-badge">ACTIVE</div>
             </div>
-            <div class="panel-grid">
-              <div>
-                <div style="font-size:11px; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:.07em; margin-bottom:12px;">Issue Details</div>
-                <div class="info-card">
-                  <div class="info-card-hdr"><div style="width:7px; height:7px; background:#c0392b; border-radius:50%; display:inline-block; margin-right:6px;"></div>Rendering Failure</div>
-                  <div class="info-card-body">
-                    <div><strong>Element:</strong> Clinic hours table</div>
-                    <div><strong>Issue:</strong> Column overflow at mobile viewport</div>
-                    <div><strong>Records affected:</strong> 18 clinic entries</div>
-                  </div>
+            <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
+              <div class="info-card">
+                <div class="info-card-hdr">Rendering Failure Detected</div>
+                <div class="info-card-body">
+                  <div><strong>Element:</strong> Clinic hours table</div>
+                  <div><strong>Issue:</strong> Column overflow on viewport</div>
                 </div>
               </div>
-              <div style="display:flex; flex-direction:column; gap:12px; justify-content: center;">
-                <button class="action-btn" onclick="goTo(3)">Fix this page →</button>
-                <button class="action-btn secondary" onclick="goTo(5)">Report to webmaster</button>
-              </div>
+              <button class="action-btn" onclick="goTo(3)">Fix this page view →</button>
+              <button class="action-btn secondary" onclick="goTo(5)">Report to webmaster</button>
             </div>
           </div>
 
           <div class="step-content" id="d-step-3">
-            <div class="detect-banner">
-              <div class="detect-title">Broken table detected on this page</div>
-              <div style="font-size:11px; color:#92400e; margin-bottom:2px;">Re-extracting clinic data into accessible format…</div>
+            <div class="detect-banner" style="padding:16px;">
+              <div class="detect-title">Extracting table records…</div>
               <div class="progress-track"><div class="progress-fill" id="d-progress"></div></div>
             </div>
-            <div style="padding:20px;">
+            <div style="padding:16px;">
               <div class="parse-log" id="d-log">
-                <div>&gt; Scanning page for table elements…</div>
-                <div>&gt; Extracting rows as structured plain text…</div>
-                <div style="color:var(--green)">&gt; Done. 18 clinic records extracted ✓</div>
+                <div>&gt; Scanning table elements…</div>
+                <div style="color:var(--green)">&gt; Done. Sanitized mobile layout built.</div>
               </div>
             </div>
           </div>
@@ -951,16 +402,15 @@
           <div class="step-content" id="d-step-4">
             <div class="result-header">
               <div class="result-title">After-Hours Clinics Near You</div>
-              <div class="result-sub">1 open now [After-Hours/Overnight] · Sorted by status · Click a clinic to select</div>
+              <div class="result-sub">1 open now [Overnight] · Sorted by status</div>
             </div>
-            <div class="clinic-grid" id="d-clinics">
+            <div class="clinic-grid" id="d-clinics" style="padding:12px; gap:8px;">
               <div class="clinic-card" onclick="selectClinic(this,'d')">
                 <div class="clinic-name">Richmond 24-Hour Clinic</div>
                 <div class="clinic-meta">
                   <span class="clinic-hours">Open 24 hours</span>
                   <span class="clinic-dist">3.4 km</span>
                 </div>
-                <div style="margin-top:4px; font-size:10px; color:var(--muted);">321 No. 3 Rd, Richmond · 604-555-0400</div>
                 <span class="open-tag">OPEN NOW · ~35 min wait</span>
               </div>
               <div class="clinic-card closed">
@@ -969,31 +419,30 @@
                   <span class="clinic-hours closed">Closed · Opens 8:00 AM</span>
                   <span class="clinic-dist">2.1 km</span>
                 </div>
-                <div style="margin-top:4px; font-size:10px; color:var(--muted);">123 Main St, Vancouver · 604-555-0100</div>
               </div>
             </div>
 
             <div class="selected-banner" id="d-selected-banner">
-              <span id="d-selected-text">✓ Clinic selected</span>
-              <div style="display:flex; gap:8px;">
-                <button class="action-btn" style="padding:7px 14px; font-size:11px;" onclick="openRegisterPanel()">Register for a time slot →</button>
-                <button class="action-btn secondary" style="padding:7px 14px; font-size:11px;" onclick="goTo(5)">Report broken table to webmaster →</button>
+              <span id="d-selected-text">Clinic selected</span>
+              <div class="selected-actions">
+                <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot →</button>
+                <button class="action-btn secondary" style="padding:7px 10px;" onclick="goTo(5)">Report to webmaster</button>
               </div>
             </div>
 
             <div class="register-panel" id="register-panel">
-              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="register-panel-head">
                 <div>
-                  <div class="register-panel-title">Pick an overnight time slot at <span id="register-clinic-name">Richmond 24-Hour Clinic</span></div>
-                  <div class="register-panel-sub" id="register-panel-sub">Walk-in slots are first-come, but reserving holds your spot in the queue.</div>
+                  <div class="register-panel-title">Pick a slot at <span id="register-clinic-name">Clinic</span></div>
+                  <div class="register-panel-sub" id="register-panel-sub">Reserving holds your spot in the queue.</div>
                 </div>
-                <button style="background:none; border:none; font-size:14px; cursor:pointer; color:var(--muted);" onclick="closeRegisterPanel()">✕</button>
+                <button style="background:none; border:none; font-size:18px; color:var(--muted);" onclick="closeRegisterPanel()">✕</button>
               </div>
 
               <div id="register-step-slot">
                 <div class="slot-grid" id="slot-grid"></div>
-                <div style="display:flex; justify-content:flex-end; margin-top:14px;">
-                  <button class="action-btn" id="register-next-btn" onclick="goToContactForm()" disabled style="padding:10px 20px; font-size:12.5px;">Continue →</button>
+                <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                  <button class="action-btn" id="register-next-btn" onclick="goToContactForm()" disabled>Continue →</button>
                 </div>
               </div>
 
@@ -1003,10 +452,10 @@
                   <label class="contact-field"><span>Phone number</span><input type="tel" id="contact-phone" placeholder="604-555-0123"></label>
                   <label class="contact-field"><span>Email</span><input type="email" id="contact-email" placeholder="maria@example.com"></label>
                 </div>
-                <div id="contact-error" style="color:var(--red); font-size:11.5px; margin-top:10px; font-weight:600;"></div>
-                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
-                  <button class="action-btn secondary" style="padding:10px 18px; font-size:12.5px;" onclick="backToSlotPicker()">&larr; Back</button>
-                  <button class="action-btn" id="register-confirm-btn" onclick="confirmRegistration()" style="padding:10px 20px; font-size:12.5px;">Confirm reservation</button>
+                <div id="contact-error" style="color:var(--red); font-size:11px; margin-top:8px; font-weight:600;"></div>
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px; padding-bottom: 20px;">
+                  <button class="action-btn secondary" onclick="backToSlotPicker()">Back</button>
+                  <button class="action-btn" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
                 </div>
               </div>
             </div>
@@ -1014,31 +463,26 @@
             <div class="registration-confirmed" id="registration-confirmed">
               <div style="flex:1;">
                 <div style="font-weight:700; font-size:13px; color:var(--blue);">Reservation confirmed</div>
-                <div id="rc-text" style="font-size:11.5px; margin-top:2px;"></div>
+                <div id="rc-text" style="font-size:11px; margin-top:2px;"></div>
                 <div class="rc-conf-number" id="rc-conf-number"></div>
               </div>
-              <button class="action-btn secondary" style="padding:6px 12px; font-size:11px; color:var(--blue); border-color:#b8d4f5;" onclick="openCancelConfirm()">Cancel</button>
+              <button class="action-btn secondary" style="padding:6px 12px; font-size:11px;" onclick="openCancelConfirm()">Cancel</button>
             </div>
           </div>
 
           <div class="step-content" id="d-step-5">
             <div class="report-wrap">
               <div class="toast">
-                <div>
-                  <div style="font-weight:700; color:var(--green); font-size:14px;">Rendering issue reported to webmaster</div>
-                  <div style="font-size:11px; color:#388e3c; margin-top:2px;">healthbc.gov · webmaster@healthbc.gov · Sent at 12:42 AM</div>
+                <div style="font-size:12px;">
+                  <div style="font-weight:700; color:var(--green);">Issue reported to webmaster</div>
+                  <div style="color:#388e3c; margin-top:2px;">Sent successfully at 12:42 AM</div>
                 </div>
               </div>
-              
-              <div style="margin-top: 5px; margin-bottom: 5px;">
-                <button class="action-btn" style="width:100%; padding:12px; font-size:13px;" onclick="goTo(2)">
-                  &larr; Return to layout tool workspace to fix page view
-                </button>
-              </div>
-
+              <button class="action-btn" style="width:100%;" onclick="goTo(2)">
+                ← Return to layout tool workspace
+              </button>
               <div class="log-block">
-                <div class="log-entry err">[ERR] table.clinic-table: col overflow at 320px viewport</div>
-                <div class="log-entry">[INF] 18 clinic rows extracted as plain text</div>
+                <div class="log-entry err">[ERR] table.clinic-table axis overflow</div>
                 <div class="log-entry ok">[INF] automated report dispatched ✓</div>
               </div>
             </div>
@@ -1049,32 +493,28 @@
 
   <div class="modal-overlay" id="cancel-modal-overlay" onclick="if(event.target===this) closeCancelConfirm()">
     <div class="modal-box">
-      <div class="modal-title" id="cancel-modal-title">Cancel this reservation?</div>
-      <div class="modal-desc" id="cancel-modal-desc">This will release your time slot at <span id="cancel-modal-clinic">the clinic</span> and cannot be undone. You'll need to register again if you change your mind.</div>
+      <div class="modal-title">Cancel this reservation?</div>
+      <div class="modal-desc">This will release your overnight time slot and cannot be undone.</div>
       <div class="modal-actions">
-        <button class="action-btn secondary" style="flex:1; padding:10px 14px; font-size:13px;" onclick="closeCancelConfirm()">Keep reservation</button>
-        <button class="action-btn" style="flex:1; background:var(--red); padding:10px 14px; font-size:13px;" onclick="confirmCancelRegistration()">Cancel reservation</button>
+        <button class="action-btn secondary" style="flex:1;" onclick="closeCancelConfirm()">Keep</button>
+        <button class="action-btn" style="flex:1; background:var(--red);" onclick="confirmCancelRegistration()">Cancel</button>
       </div>
     </div>
   </div>
 
   <div class="modal-overlay" id="details-modal-overlay">
     <div class="modal-box">
-      <div class="modal-title" style="color: var(--blue); display:flex; align-items:center; gap:8px;">
-        <span>🎉 Reservation Held</span>
-      </div>
-      <div class="modal-desc" style="margin-top:10px;">
-        Your spot in the clinic line has been recorded. Please arrive 10 minutes early and remember to bring the following items to the clinic:
+      <div class="modal-title" style="color: var(--blue);">🎉 Reservation Confirmed</div>
+      <div class="modal-desc" style="margin-top:6px;">
+        Please bring these required items to your check-in:
       </div>
       <ul class="modal-list">
-        <li><strong>1 piece of valid photo ID</strong> (e.g., Driver's License or Passport)</li>
-        <li><strong>Your confirmation number</strong> (<span id="modal-conf-display" style="font-family:var(--mono); font-weight:700;"></span>)</li>
-        <li><strong>Your MSP card</strong> (BC CareCard / BC Services Card)</li>
+        <li><strong>1 piece of valid ID</strong></li>
+        <li><strong>Confirmation number</strong> (<span id="modal-conf-display" style="font-family:var(--mono); font-weight:700;"></span>)</li>
+        <li><strong>Your MSP Card</strong></li>
       </ul>
-      <div class="modal-actions" style="margin-top:18px;">
-        <button class="action-btn" style="flex:1; padding:12px; font-size:13px; justify-content:center;" onclick="closeDetailsModal()">
-          Got it
-        </button>
+      <div class="modal-actions">
+        <button class="action-btn" style="flex:1;" onclick="closeDetailsModal()">Got it</button>
       </div>
     </div>
   </div>
@@ -1086,10 +526,8 @@
     let advanceTimer = null;
 
     const STORAGE_KEY = 'maria-clinic-registration';
-
     const CLINIC_SLOTS = {
-      'Richmond 24-Hour Clinic': ['1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM', '3:15 AM', '4:00 AM'],
-      'Vancouver Care Clinic': ['8:00 AM', '8:30 AM', '9:00 AM']
+      'Richmond 24-Hour Clinic': ['1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM', '3:15 AM']
     };
 
     let selectedClinicName = '';
@@ -1103,19 +541,15 @@
       localStorage.setItem(testKey, '1');
       localStorage.removeItem(testKey);
       storageAvailable = true;
-    } catch (e) {
-      storageAvailable = false;
-    }
+    } catch (e) {}
 
     function updateStep(step, fromBack) {
       clearTimeout(toastTimer);
       clearTimeout(advanceTimer);
       currentStep = step;
 
-      if (!fromBack) {
-        if (stepHistory[stepHistory.length - 1] !== step) {
-          stepHistory.push(step);
-        }
+      if (!fromBack && stepHistory[stepHistory.length - 1] !== step) {
+        stepHistory.push(step);
       }
       document.getElementById('back-bar').classList.toggle('show', stepHistory.length > 1);
 
@@ -1127,13 +561,11 @@
       const dCurrent = document.getElementById('d-step-' + step);
       if (dCurrent) dCurrent.classList.add('visible');
 
-      // Clear layout scroll tracking modifiers on reset
       document.getElementById('d-step-4').classList.remove('has-banner-padding');
 
       if (step === 4 && !fromBack) {
         document.querySelectorAll('#d-clinics .clinic-card').forEach(c => c.classList.remove('selected'));
-        const banner = document.getElementById('d-selected-banner');
-        if (banner) banner.classList.remove('show');
+        document.getElementById('d-selected-banner').classList.remove('show');
         closeRegisterPanel();
         renderSavedRegistration();
       }
@@ -1142,9 +574,7 @@
       if (toast) toast.classList.remove('show');
 
       if (step === 1) {
-        toastTimer = setTimeout(() => {
-          if (toast) toast.classList.add('show');
-        }, 1400);
+        toastTimer = setTimeout(() => { if (toast) toast.classList.add('show'); }, 1000);
       }
 
       const dp = document.getElementById('d-progress');
@@ -1155,9 +585,6 @@
           setTimeout(() => dp.classList.add('running'), 100);
         }
         advanceTimer = setTimeout(() => goTo(4), 2600);
-      } else if (dp) {
-        dp.classList.remove('running');
-        void dp.offsetWidth;
       }
     }
 
@@ -1177,21 +604,17 @@
 
     function selectClinic(el, prefix) {
       const container = document.getElementById(prefix + '-clinics');
-      if (!container) return;
+      if (!container || el.classList.contains('closed')) return;
       container.querySelectorAll('.clinic-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
-      const nameEl = el.querySelector('.clinic-name');
-      const distEl = el.querySelector('.clinic-dist');
-      const name = nameEl ? nameEl.textContent : '';
-      const dist = distEl ? distEl.textContent : '';
-      const banner = document.getElementById(prefix + '-selected-banner');
-      const textEl = document.getElementById(prefix + '-selected-text');
-      if (banner && textEl) {
-        textEl.textContent = '✓ ' + name + ' — ' + dist + ' away';
-        banner.classList.add('show');
-      }
       
-      // Inject safety bottom scroll margins to avoid fixed overlay footer buttons overlap clipping
+      const name = el.querySelector('.clinic-name').textContent;
+      const dist = el.querySelector('.clinic-dist').textContent;
+      
+      const banner = document.getElementById(prefix + '-selected-banner');
+      document.getElementById(prefix + '-selected-text').textContent = '✓ ' + name;
+      banner.classList.add('show');
+      
       document.getElementById('d-step-4').classList.add('has-banner-padding');
       
       selectedClinicName = name;
@@ -1201,19 +624,15 @@
 
     function openRegisterPanel() {
       const panel = document.getElementById('register-panel');
-      const nameSpan = document.getElementById('register-clinic-name');
+      document.getElementById('register-clinic-name').textContent = selectedClinicName;
       const grid = document.getElementById('slot-grid');
-      if (!panel || !grid) return;
-
-      nameSpan.textContent = selectedClinicName || 'this clinic';
-      const slots = CLINIC_SLOTS[selectedClinicName] || ['1:00 AM', '2:00 AM', '3:00 AM'];
+      const slots = CLINIC_SLOTS[selectedClinicName] || ['1:00 AM', '2:00 AM'];
       pickedSlot = null;
 
       grid.innerHTML = '';
       slots.forEach(time => {
         const btn = document.createElement('button');
         btn.className = 'slot-btn';
-        btn.type = 'button';
         btn.textContent = time;
         btn.onclick = () => pickSlot(btn, time);
         grid.appendChild(btn);
@@ -1222,24 +641,13 @@
       showSlotStep();
       document.getElementById('register-next-btn').disabled = true;
       panel.classList.add('show');
-      
-      // Smooth scroll adjust so content shifts nicely without covering form parameters
-      setTimeout(() => {
-        panel.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }, 50);
     }
 
-    function closeRegisterPanel() {
-      const panel = document.getElementById('register-panel');
-      if (panel) panel.classList.remove('show');
-      showSlotStep();
-    }
+    function closeRegisterPanel() { document.getElementById('register-panel').classList.remove('show'); }
 
     function showSlotStep() {
       document.getElementById('register-step-slot').style.display = '';
       document.getElementById('register-step-contact').style.display = 'none';
-      document.getElementById('register-panel-sub').textContent = 'Walk-in slots are first-come, but reserving holds your spot in the queue.';
-      document.getElementById('contact-error').textContent = '';
     }
 
     function pickSlot(btn, time) {
@@ -1253,12 +661,6 @@
       if (!pickedSlot) return;
       document.getElementById('register-step-slot').style.display = 'none';
       document.getElementById('register-step-contact').style.display = '';
-      document.getElementById('register-panel-sub').textContent = 'Enter your contact details to hold this ' + pickedSlot + ' slot.';
-      
-      // Recalculate auto placement scrolling view bounds 
-      setTimeout(() => {
-        document.getElementById('register-step-contact').scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }, 50);
     }
 
     function backToSlotPicker() { showSlotStep(); }
@@ -1271,41 +673,22 @@
     }
 
     function confirmRegistration() {
-      const nameEl = document.getElementById('contact-name');
-      const phoneEl = document.getElementById('contact-phone');
-      const emailEl = document.getElementById('contact-email');
+      const name = document.getElementById('contact-name').value.trim();
+      const phone = document.getElementById('contact-phone').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
       const errorEl = document.getElementById('contact-error');
 
-      const name = nameEl.value.trim();
-      const phone = phoneEl.value.trim();
-      const email = emailEl.value.trim();
-
       if (!name || !phone || !email) {
-        errorEl.textContent = 'Please fill in your name, phone number, and email.';
-        return;
-      }
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        errorEl.textContent = 'Please enter a valid email address.';
+        errorEl.textContent = 'Please fill in all details.';
         return;
       }
       errorEl.textContent = '';
 
       const confNum = generateConfirmationNumber();
-
-      const registration = {
-        clinic: selectedClinicName,
-        meta: selectedClinicMeta,
-        time: pickedSlot,
-        name: name,
-        phone: phone,
-        email: email,
-        confirmationNumber: confNum,
-        savedAt: new Date().toISOString()
-      };
+      const registration = { clinic: selectedClinicName, time: pickedSlot, confirmationNumber: confNum };
 
       if (storageAvailable) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(registration)); } catch (e) { console.warn(e); }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registration));
       } else {
         window.__sessionRegistration = registration;
       }
@@ -1313,77 +696,43 @@
       closeRegisterPanel();
       renderSavedRegistration();
 
-      // Trigger the interactive information pop-up checklist
       document.getElementById('modal-conf-display').textContent = confNum;
       document.getElementById('details-modal-overlay').classList.add('show');
     }
 
-    function closeDetailsModal() {
-      document.getElementById('details-modal-overlay').classList.remove('show');
-    }
-
-    function openCancelConfirm() {
-      const saved = getSavedRegistration();
-      const clinicSpan = document.getElementById('cancel-modal-clinic');
-      if (clinicSpan) clinicSpan.textContent = (saved && saved.clinic) ? saved.clinic : 'this clinic';
-      document.getElementById('cancel-modal-overlay').classList.add('show');
-    }
-
+    function closeDetailsModal() { document.getElementById('details-modal-overlay').classList.remove('show'); }
+    function openCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.add('show'); }
     function closeCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.remove('show'); }
 
     function confirmCancelRegistration() {
-      if (storageAvailable) {
-        try { localStorage.removeItem(STORAGE_KEY); } catch (e) { console.warn(e); }
-      }
+      if (storageAvailable) localStorage.removeItem(STORAGE_KEY);
       window.__sessionRegistration = null;
       closeCancelConfirm();
       renderSavedRegistration();
     }
 
     function getSavedRegistration() {
-      if (storageAvailable) {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? JSON.parse(raw) : null;
-        } catch (e) { return null; }
-      }
+      if (storageAvailable) return JSON.parse(localStorage.getItem(STORAGE_KEY));
       return window.__sessionRegistration || null;
     }
 
     function renderSavedRegistration() {
       const confirmedBox = document.getElementById('registration-confirmed');
-      const rcText = document.getElementById('rc-text');
-      const rcConfNumber = document.getElementById('rc-conf-number');
-      if (!confirmedBox || !rcText) return;
-
       const saved = getSavedRegistration();
 
-      if (saved && saved.clinic && saved.time) {
-        rcText.textContent = saved.clinic + ' — today at ' + saved.time + (saved.meta ? ' · ' + saved.meta + ' away' : '') + (saved.name ? ' · ' + saved.name : '');
-        if (rcConfNumber) { rcConfNumber.textContent = saved.confirmationNumber ? 'Confirmation #' + saved.confirmationNumber : ''; }
+      if (saved && saved.clinic) {
+        document.getElementById('rc-text').textContent = saved.clinic + ' at ' + saved.time;
+        document.getElementById('rc-conf-number').textContent = 'Confirmation #' + saved.confirmationNumber;
         confirmedBox.classList.add('show');
         document.getElementById('d-step-4').classList.add('has-banner-padding');
       } else {
         confirmedBox.classList.remove('show');
-        document.getElementById('d-step-4').classList.remove('has-banner-padding');
       }
     }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const overlay = document.getElementById('cancel-modal-overlay');
-        if (overlay && overlay.classList.contains('show')) closeCancelConfirm();
-        
-        const detailsOverlay = document.getElementById('details-modal-overlay');
-        if (detailsOverlay && detailsOverlay.classList.contains('show')) closeDetailsModal();
-      }
-    });
-
     renderSavedRegistration();
-    const existingRegistration = getSavedRegistration();
-    if (existingRegistration) {
-      stepHistory = [0, 4];
-      updateStep(4, true);
+    if (getSavedRegistration()) {
+      stepHistory = [0, 4]; updateStep(4, true);
     } else {
       updateStep(0, true);
     }
