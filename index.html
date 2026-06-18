@@ -24,7 +24,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* ── FIX NATIVE SCROLL ── */
+    /* ── SCROLL FIX NATIVE ── */
     html, body { 
       height: auto; 
       min-height: 100%; 
@@ -67,10 +67,7 @@
       transition: background .15s;
     }
     .back-btn:hover { background: #e8e8e3; }
-    .back-btn:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 1px;
-    }
+    .back-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
     .back-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     /* ── Main stage ──────────────────────── */
@@ -88,7 +85,7 @@
     
     .browser-body {
       display: block;
-      padding-bottom: 100px; /* Padding cơ bản */
+      padding-bottom: 40px; 
     }
 
     /* ── Real-site interaction affordances ── */
@@ -101,62 +98,16 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
     }
-    @media (max-width: 700px) {
-      .services-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 420px) {
-      .services-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 700px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px) { .services-grid { grid-template-columns: 1fr; } }
+    
     .clinic-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       padding: 16px;
     }
-    @media (max-width: 600px) {
-      .clinic-grid { grid-template-columns: 1fr; }
-    }
-
-    .a11y-toast {
-      position: relative;
-      background: linear-gradient(135deg, #92400e, #b45309);
-      color: #fff;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 6px 24px rgba(0,0,0,.35);
-      cursor: pointer;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      pointer-events: none;
-      transition: opacity .3s ease, max-height .35s cubic-bezier(.2,.8,.3,1), padding .35s ease;
-      z-index: 60;
-      flex-shrink: 0;
-    }
-    .a11y-toast.show { opacity: 1; max-height: 200px; pointer-events: auto; animation: a11yPulse 1.8s ease 1; }
-    @keyframes a11yPulse {
-      0% { box-shadow: 0 6px 24px rgba(0,0,0,.35), 0 0 0 0 rgba(252,186,25,.6); }
-      60% { box-shadow: 0 6px 24px rgba(0,0,0,.35), 0 0 0 14px rgba(252,186,25,0); }
-      100% { box-shadow: 0 6px 24px rgba(0,0,0,.35), 0 0 0 0 rgba(252,186,25,0); }
-    }
-    .a11y-toast-icon {
-      width: 42px; height: 42px; flex-shrink: 0;
-      background: #fcba19; color: #1a1a1a;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 21px; font-weight: 900;
-    }
-    .a11y-toast-body { flex: 1; min-width: 0; }
-    .a11y-toast-title { font-size: 15px; font-weight: 800; letter-spacing: -.01em; }
-    .a11y-toast-sub { font-size: 12.5px; opacity: .85; margin-top: 2px; }
-    @media (max-width: 560px) {
-      .a11y-toast { padding: 12px 16px; gap: 12px; }
-      .a11y-toast-icon { width: 34px; height: 34px; font-size: 17px; }
-      .a11y-toast-title { font-size: 13px; }
-      .a11y-toast-sub { font-size: 11px; }
-    }
+    @media (max-width: 600px) { .clinic-grid { grid-template-columns: 1fr; } }
 
     /* ── Step content panels ─────────────── */
     .step-content {
@@ -165,6 +116,7 @@
       height: auto; 
       min-height: 100%;
       animation: fadeIn .3s ease;
+      padding-bottom: 140px; /* An toàn cho banner mobile */
     }
     .step-content.visible { display: flex; }
 
@@ -172,12 +124,8 @@
 
     /* ── Site Header ── */
     .bc-health-header {
-      background: #003366;
-      color: #fff;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      background: #003366; color: #fff; padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .bc-logo { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
     .bc-logo span { color: #ffd700; }
@@ -218,7 +166,6 @@
     }
     .action-btn:hover { background: #154a87; }
     .action-btn.secondary { background: #fff; color: #1a1a1a; border: 1px solid #d8d4ce; }
-    .action-btn.secondary:hover { background: #f5f5f0; }
 
     /* ── Step 3 ───────────────── */
     .detect-banner {
@@ -232,18 +179,13 @@
     .parse-log { font-family: var(--mono); font-size: 11px; color: #888; display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
 
     /* ── Step 4 ────────────── */
-    .result-header {
-      background: var(--blue);
-      color: #fff;
-      padding: 14px 20px;
-    }
+    .result-header { background: var(--blue); color: #fff; padding: 14px 20px; }
     .result-title { font-size: 16px; font-weight: 700; }
     .result-sub { font-size: 11px; opacity: .75; margin-top: 3px; }
     
     .clinic-card {
       background: #fff; border: 1px solid var(--border); border-radius: 8px;
-      padding: 14px; cursor: pointer; transition: all 0.15s ease;
-      margin-bottom: 10px;
+      padding: 14px; cursor: pointer; transition: all 0.15s ease; margin-bottom: 10px;
     }
     .clinic-card.selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 2px rgba(26,92,168,.2); }
     .clinic-card.closed { opacity: .5; cursor: default; }
@@ -262,7 +204,7 @@
       font-size: 13px;
       color: var(--green);
       font-weight: 600;
-      display: none;
+      display: none; /* Ẩn theo mặc định */
       flex-direction: column;
       gap: 12px;
       position: fixed;
@@ -317,8 +259,11 @@
     }
     .contact-error { color: var(--red); font-size: 12px; font-weight: 600; margin-top: 10px; min-height: 1em; }
 
-    /* FLEX-WRAP CHO NÚT CONFIRM */
-    .register-confirm-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; padding-bottom: 24px;}
+    /* FLEX-WRAP CHO NÚT CONFIRM + THÊM ĐỆM PADDING ĐỂ CUỘN QUA NÚT TRÊN IPHONE SE */
+    .register-confirm-row { 
+      display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; 
+      padding-bottom: 30px; /* Đệm cách đáy an toàn */
+    }
     .register-confirm-row button { flex: 1; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 8px; min-width: 120px; }
 
     /* ── Modals & Confirmed states ────── */
@@ -329,7 +274,7 @@
     .registration-confirmed.show { display: flex; }
     
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(20,20,20,.6); z-index: 200;
+      display: none; position: fixed; inset: 0; background: rgba(20,20,20,.6); z-index: 400;
       align-items: center; justify-content: center; padding: 20px;
     }
     .modal-overlay.show { display: flex; }
@@ -344,14 +289,6 @@
     .btn-primary { background: var(--blue); color: #fff;}
     .btn-secondary { background: #f5f5f0; color: #1a1a1a; border: 1px solid var(--border); }
     .btn-danger { background: var(--red); color: #fff; }
-
-    /* Step 5 */
-    .report-wrap { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-    .toast { background: var(--green-light); border: 1px solid #a5d6a7; border-radius: 6px; padding: 12px 14px; display: flex; gap: 8px; }
-    .log-block { font-family: var(--mono); font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
-    .log-entry { background: #f0f0ec; padding: 6px 12px; border-radius: 6px; color: #666; }
-    .log-entry.err { background: #fde8e8; color: var(--red); }
-    .log-entry.ok { background: var(--green-light); color: var(--green); }
   </style>
 </head>
 <body>
@@ -419,14 +356,6 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
-            
-            <div class="a11y-toast" id="a11y-toast" onclick="goTo(2)">
-              <div class="a11y-toast-icon">!</div>
-              <div>
-                <div class="a11y-toast-title">Accessibility issue detected</div>
-                <div class="a11y-toast-sub">This table is broken. We can fix it for you.</div>
-              </div>
             </div>
           </div>
 
@@ -539,11 +468,20 @@
               </div>
               <button class="rc-cancel" onclick="openCancelConfirm()">Cancel</button>
             </div>
+            
+            <div class="selected-banner" id="d-selected-banner">
+              <span id="d-selected-text" style="font-size:13px;">✓ Clinic selected</span>
+              <div class="selected-actions">
+                <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot &rarr;</button>
+                <button class="report-issue-btn" onclick="goTo(5)">Report broken table &rarr;</button>
+              </div>
+            </div>
+            
           </div>
 
           <div class="step-content" id="d-step-5">
             <div class="report-wrap">
-              <div class="toast">
+              <div style="background:var(--green-light); border:1px solid #a5d6a7; border-radius:6px; padding:12px 14px; display:flex; gap:8px;">
                 <span style="font-size:24px; color:var(--green);">✓</span>
                 <div>
                   <div style="font-weight:700; color:var(--green); font-size:15px;">Rendering issue reported to webmaster</div>
@@ -555,22 +493,9 @@
                   &larr; Return to layout tool
                 </button>
               </div>
-              <div class="log-block">
-                <div class="log-entry err">[ERR] table.clinic-table: col overflow at 320px viewport</div>
-                <div class="log-entry ok">[INF] automated report dispatched ✓</div>
-              </div>
             </div>
           </div>
       </div>
-
-      <div class="selected-banner" id="d-selected-banner">
-        <span id="d-selected-text" style="font-size:13px;">✓ Clinic selected</span>
-        <div class="selected-actions">
-          <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot &rarr;</button>
-          <button class="report-issue-btn" onclick="goTo(5)">Report broken table &rarr;</button>
-        </div>
-      </div>
-
     </div>
   </main>
 
@@ -626,9 +551,7 @@
       localStorage.setItem(testKey, '1');
       localStorage.removeItem(testKey);
       storageAvailable = true;
-    } catch (e) {
-      storageAvailable = false;
-    }
+    } catch (e) {}
 
     function updateStep(step, fromBack) {
       clearTimeout(toastTimer);
@@ -653,46 +576,31 @@
       if (step === 4 && !fromBack) {
         document.querySelectorAll('#d-clinics .clinic-card').forEach(c => c.classList.remove('selected'));
         
-        // KIỂM SOÁT BANNER BẰNG JS TẠI ĐÂY
+        // Đảm bảo ẩn banner khi khởi tạo trang 4
         const banner = document.getElementById('d-selected-banner');
-        if(banner) {
-            banner.classList.remove('show');
-            banner.style.display = 'none';
+        if (banner) {
+          banner.classList.remove('show');
+          banner.style.display = 'none';
         }
         
         closeRegisterPanel();
         renderSavedRegistration();
       }
 
-      const toast = document.getElementById('a11y-toast');
-      if (toast) toast.classList.remove('show');
-
-      if (step === 1) {
-        toastTimer = setTimeout(() => {
-          if (toast) toast.classList.add('show');
-        }, 1400);
-      }
-
-      const dp = document.getElementById('d-progress');
       if (step === 3) {
+        const dp = document.getElementById('d-progress');
         if (dp) {
           dp.classList.remove('running');
           void dp.offsetWidth;
           setTimeout(() => dp.classList.add('running'), 100);
         }
         advanceTimer = setTimeout(() => goTo(4), 2600);
-      } else if (dp) {
-        dp.classList.remove('running');
-        void dp.offsetWidth;
       }
       
-      // Reset scroll natively
       window.scrollTo(0, 0);
     }
 
-    function goTo(step) {
-      updateStep(step, false);
-    }
+    function goTo(step) { updateStep(step, false); }
 
     function goBack() {
       if (stepHistory.length > 1) {
@@ -713,21 +621,19 @@
       container.querySelectorAll('.clinic-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       
-      const nameEl = el.querySelector('.clinic-name');
-      const distEl = el.querySelector('.clinic-dist');
-      const name = nameEl ? nameEl.textContent : '';
-      const dist = distEl ? distEl.textContent : '';
+      const name = el.querySelector('.clinic-name').textContent;
+      const dist = el.querySelector('.clinic-dist').textContent;
+      
       const banner = document.getElementById(prefix + '-selected-banner');
       const textEl = document.getElementById(prefix + '-selected-text');
       
       if (banner && textEl) {
         textEl.textContent = '✓ ' + name;
+        
+        // Bật banner nếu form chưa mở
         if (!document.getElementById('register-panel').classList.contains('show')) {
           banner.style.display = 'flex';
           banner.classList.add('show');
-        } else {
-          banner.style.display = 'none';
-          banner.classList.remove('show');
         }
       }
       selectedClinicName = name;
@@ -737,11 +643,8 @@
 
     function openRegisterPanel() {
       const panel = document.getElementById('register-panel');
-      const nameSpan = document.getElementById('register-clinic-name');
+      document.getElementById('register-clinic-name').textContent = selectedClinicName;
       const grid = document.getElementById('slot-grid');
-      if (!panel || !grid) return;
-
-      nameSpan.textContent = selectedClinicName || 'this clinic';
       const slots = CLINIC_SLOTS[selectedClinicName] || ['1:00 AM', '2:00 AM', '3:00 AM'];
       pickedSlot = null;
 
@@ -749,17 +652,16 @@
       slots.forEach(time => {
         const btn = document.createElement('button');
         btn.className = 'slot-btn';
-        btn.type = 'button';
         btn.textContent = time;
         btn.onclick = () => pickSlot(btn, time);
         grid.appendChild(btn);
       });
 
-      // BÚA TẠ BẰNG JAVASCRIPT: XÓA SẠCH HIỂN THỊ CỦA BANNER
+      // ÉP ẨN BANNER BẰNG JAVASCRIPT
       const banner = document.getElementById('d-selected-banner');
-      if(banner) {
-          banner.classList.remove('show');
-          banner.style.display = 'none'; // Force hide
+      if (banner) {
+        banner.classList.remove('show');
+        banner.style.display = 'none';
       }
 
       showSlotStep();
@@ -777,7 +679,7 @@
       
       showSlotStep();
       
-      // Khôi phục banner nếu có
+      // Khôi phục banner nếu có click chọn phòng khám và chưa có đăng ký
       if (selectedClinicName && !getSavedRegistration()) {
         const banner = document.getElementById('d-selected-banner');
         if (banner) {
@@ -811,9 +713,7 @@
       }, 50);
     }
 
-    function backToSlotPicker() {
-      showSlotStep();
-    }
+    function backToSlotPicker() { showSlotStep(); }
 
     function generateConfirmationNumber() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; 
@@ -845,21 +745,16 @@
       }
       errorEl.textContent = '';
 
+      const confNum = generateConfirmationNumber();
       const registration = {
         clinic: selectedClinicName,
-        meta: selectedClinicMeta,
         time: pickedSlot,
-        name: name,
-        phone: phone,
-        email: email,
-        confirmationNumber: generateConfirmationNumber(),
-        savedAt: new Date().toISOString()
+        confirmationNumber: confNum
       };
 
       if (storageAvailable) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(registration));
-        } catch (e) { }
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(registration)); } 
+        catch (e) {}
       } else {
         window.__sessionRegistration = registration;
       }
@@ -867,12 +762,12 @@
       closeRegisterPanel();
       renderSavedRegistration();
 
-      document.getElementById('modal-conf-display').textContent = registration.confirmationNumber;
+      document.getElementById('modal-conf-display').textContent = confNum;
       document.getElementById('details-modal-overlay').classList.add('show');
       
-      // Ensure banner stays hidden after confirmation
+      // Giữ cho banner biến mất vĩnh viễn sau khi đăng ký
       const banner = document.getElementById('d-selected-banner');
-      if(banner) {
+      if (banner) {
           banner.classList.remove('show');
           banner.style.display = 'none';
       }
@@ -882,24 +777,21 @@
 
     function openCancelConfirm() {
       const saved = getSavedRegistration();
-      const clinicSpan = document.getElementById('cancel-modal-clinic');
-      if (clinicSpan) clinicSpan.textContent = (saved && saved.clinic) ? saved.clinic : 'this clinic';
+      if (saved) document.getElementById('cancel-modal-clinic').textContent = saved.clinic;
       document.getElementById('cancel-modal-overlay').classList.add('show');
     }
 
-    function closeCancelConfirm() {
-      document.getElementById('cancel-modal-overlay').classList.remove('show');
-    }
+    function closeCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.remove('show'); }
 
     function confirmCancelRegistration() {
       if (storageAvailable) {
-        try { localStorage.removeItem(STORAGE_KEY); } 
-        catch (e) {}
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
       }
       window.__sessionRegistration = null;
       closeCancelConfirm();
       renderSavedRegistration();
       
+      // Bật lại banner sau khi hủy
       if(selectedClinicName) {
          const banner = document.getElementById('d-selected-banner');
          if(banner) {
@@ -921,21 +813,15 @@
 
     function renderSavedRegistration() {
       const confirmedBox = document.getElementById('registration-confirmed');
-      const rcText = document.getElementById('rc-text');
-      const rcConfNumber = document.getElementById('rc-conf-number');
-      if (!confirmedBox || !rcText) return;
-
       const saved = getSavedRegistration();
 
-      if (saved && saved.clinic && saved.time) {
-        rcText.textContent = saved.clinic + ' — today at ' + saved.time;
-        if (rcConfNumber) {
-          rcConfNumber.textContent = saved.confirmationNumber ? 'Confirmation #' + saved.confirmationNumber : '';
-        }
+      if (saved && saved.clinic) {
+        document.getElementById('rc-text').textContent = saved.clinic + ' — today at ' + saved.time;
+        document.getElementById('rc-conf-number').textContent = 'Confirmation #' + saved.confirmationNumber;
         confirmedBox.classList.add('show');
         
         const banner = document.getElementById('d-selected-banner');
-        if(banner) {
+        if (banner) {
             banner.classList.remove('show');
             banner.style.display = 'none';
         }
@@ -945,10 +831,8 @@
     }
 
     renderSavedRegistration();
-    const existingRegistration = getSavedRegistration();
-    if (existingRegistration) {
-      stepHistory = [0, 4];
-      updateStep(4, true);
+    if (getSavedRegistration()) {
+      stepHistory = [0, 4]; updateStep(4, true);
     } else {
       updateStep(0, true);
     }
