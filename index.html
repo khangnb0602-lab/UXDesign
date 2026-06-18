@@ -24,18 +24,18 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* ── FIX FIREFOX & IOS SCROLL LOCK: Chuyển về Native Block Flow ── */
+    /* ── FIX NATIVE SCROLL ── */
     html, body { 
       height: auto; 
       min-height: 100%; 
       overflow-x: hidden; 
-      overflow-y: auto; /* Bắt buộc cho phép cuộn dọc */
+      overflow-y: auto; 
     }
 
     body {
       font-family: var(--font);
       background: var(--bg);
-      display: block; /* Hủy flexbox ở body */
+      display: block; 
     }
 
     /* ── Floating restart control ─────────── */
@@ -74,7 +74,6 @@
     .back-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     /* ── Main stage ──────────────────────── */
-    /* Dùng display: block để trang luôn tràn xuống, tạo thanh cuộn */
     .stage {
       display: block;
       width: 100%;
@@ -89,7 +88,7 @@
     
     .browser-body {
       display: block;
-      padding-bottom: 180px; /* Khoảng đệm đáy khổng lồ để cuộn an toàn */
+      padding-bottom: 100px; /* Padding cơ bản */
     }
 
     /* ── Real-site interaction affordances ── */
@@ -255,7 +254,7 @@
     .clinic-dist { color: var(--muted); }
     .open-tag { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green-light); color: var(--green); padding: 4px 8px; border-radius: 4px; margin-top: 8px; }
 
-    /* ── CSS THÔNG MINH HỦY BANNER NẾU MỞ FORM ── */
+    /* ── FIXED BANNER ── */
     .selected-banner {
       background: var(--green-light);
       border-top: 1px solid #a5d6a7;
@@ -272,11 +271,6 @@
       box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
     }
     .selected-banner.show { display: flex; }
-    
-    /* Ép ẩn tuyệt đối banner bằng body class */
-    body.form-open .selected-banner {
-      display: none !important;
-    }
 
     .selected-actions { display: flex; gap: 8px; width: 100%; flex-direction: column; }
     .report-issue-btn, .register-btn {
@@ -323,7 +317,7 @@
     }
     .contact-error { color: var(--red); font-size: 12px; font-weight: 600; margin-top: 10px; min-height: 1em; }
 
-    /* FLEX-WRAP ĐẢM BẢO CHỮ KHÔNG BỊ TRÀN Ở IPHONE SE */
+    /* FLEX-WRAP CHO NÚT CONFIRM */
     .register-confirm-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; padding-bottom: 24px;}
     .register-confirm-row button { flex: 1; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 8px; min-width: 120px; }
 
@@ -477,24 +471,23 @@
               <div class="result-sub">1 open now [Overnight] · Sorted by distance</div>
             </div>
             
-            <div style="padding:16px;">
+            <div class="clinic-grid" id="d-clinics" style="padding:16px; gap:12px;">
               <div class="clinic-card" onclick="selectClinic(this,'d')">
                 <div class="clinic-name">Richmond 24-Hour Clinic</div>
                 <div class="clinic-meta">
                   <span class="clinic-hours">Open 24 hours</span>
                   <span class="clinic-dist">3.4 km</span>
                 </div>
-                <div style="margin-top:4px;font-size:11px;color:var(--muted);">321 No. 3 Rd, Richmond · 604-555-0400</div>
+                <div style="margin-top:6px; font-size:12px; color:var(--muted);">321 No. 3 Rd, Richmond · 604-555-0400</div>
                 <span class="open-tag">OPEN NOW · ~35 min wait</span>
               </div>
-              
               <div class="clinic-card closed">
                 <div class="clinic-name">Vancouver Care Clinic</div>
                 <div class="clinic-meta">
-                  <span class="clinic-hours closed">Closed · Opens 8 AM</span>
+                  <span class="clinic-hours closed">Closed · Opens 8:00 AM</span>
                   <span class="clinic-dist">2.1 km</span>
                 </div>
-                <div style="margin-top:4px;font-size:11px;color:var(--muted);">123 Main St, Vancouver</div>
+                <div style="margin-top:6px; font-size:12px; color:var(--muted);">123 Main St, Vancouver · 604-555-0100</div>
               </div>
             </div>
 
@@ -502,7 +495,7 @@
               <div class="register-panel-head">
                 <div>
                   <div class="register-panel-title">Pick an overnight time slot at <br><span id="register-clinic-name">Clinic</span></div>
-                  <div class="register-panel-sub" id="register-panel-sub">Reserving holds your spot in the queue.</div>
+                  <div class="register-panel-sub" id="register-panel-sub">Walk-in slots are first-come, but reserving holds your spot in the queue.</div>
                 </div>
                 <button class="register-close" onclick="closeRegisterPanel()">✕</button>
               </div>
@@ -529,7 +522,7 @@
                     <input type="email" id="contact-email" placeholder="maria@example.com" autocomplete="email">
                   </label>
                 </div>
-                <div class="contact-error" id="contact-error"></div>
+                <div id="contact-error" class="contact-error"></div>
                 <div class="register-confirm-row">
                   <button class="register-back-btn btn-secondary" onclick="backToSlotPicker()">Back</button>
                   <button class="register-confirm-btn" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
@@ -642,9 +635,6 @@
       clearTimeout(advanceTimer);
       currentStep = step;
 
-      // Xóa form open lock khi chuyển trang
-      document.body.classList.remove('form-open');
-
       if (!fromBack) {
         if (stepHistory[stepHistory.length - 1] !== step) {
           stepHistory.push(step);
@@ -662,7 +652,14 @@
 
       if (step === 4 && !fromBack) {
         document.querySelectorAll('#d-clinics .clinic-card').forEach(c => c.classList.remove('selected'));
-        document.getElementById('d-selected-banner').classList.remove('show');
+        
+        // KIỂM SOÁT BANNER BẰNG JS TẠI ĐÂY
+        const banner = document.getElementById('d-selected-banner');
+        if(banner) {
+            banner.classList.remove('show');
+            banner.style.display = 'none';
+        }
+        
         closeRegisterPanel();
         renderSavedRegistration();
       }
@@ -726,7 +723,11 @@
       if (banner && textEl) {
         textEl.textContent = '✓ ' + name;
         if (!document.getElementById('register-panel').classList.contains('show')) {
+          banner.style.display = 'flex';
           banner.classList.add('show');
+        } else {
+          banner.style.display = 'none';
+          banner.classList.remove('show');
         }
       }
       selectedClinicName = name;
@@ -754,8 +755,12 @@
         grid.appendChild(btn);
       });
 
-      // TÍNH NĂNG TỰ ĐỘNG ẨN BANNER THÔNG QUA CSS CLASS
-      document.body.classList.add('form-open');
+      // BÚA TẠ BẰNG JAVASCRIPT: XÓA SẠCH HIỂN THỊ CỦA BANNER
+      const banner = document.getElementById('d-selected-banner');
+      if(banner) {
+          banner.classList.remove('show');
+          banner.style.display = 'none'; // Force hide
+      }
 
       showSlotStep();
       document.getElementById('register-next-btn').disabled = true;
@@ -770,8 +775,16 @@
       const panel = document.getElementById('register-panel');
       if (panel) panel.classList.remove('show');
       
-      document.body.classList.remove('form-open');
       showSlotStep();
+      
+      // Khôi phục banner nếu có
+      if (selectedClinicName && !getSavedRegistration()) {
+        const banner = document.getElementById('d-selected-banner');
+        if (banner) {
+            banner.style.display = 'flex';
+            banner.classList.add('show');
+        }
+      }
     }
 
     function showSlotStep() {
@@ -803,9 +816,11 @@
     }
 
     function generateConfirmationNumber() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; 
       let code = 'BC-';
-      for (let i = 0; i < 6; i++) { code += chars[Math.floor(Math.random() * chars.length)]; }
+      for (let i = 0; i < 6; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+      }
       return code;
     }
 
@@ -830,7 +845,6 @@
       }
       errorEl.textContent = '';
 
-      const confNum = generateConfirmationNumber();
       const registration = {
         clinic: selectedClinicName,
         meta: selectedClinicMeta,
@@ -838,13 +852,14 @@
         name: name,
         phone: phone,
         email: email,
-        confirmationNumber: confNum,
+        confirmationNumber: generateConfirmationNumber(),
         savedAt: new Date().toISOString()
       };
 
       if (storageAvailable) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(registration)); } 
-        catch (e) {}
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(registration));
+        } catch (e) { }
       } else {
         window.__sessionRegistration = registration;
       }
@@ -852,13 +867,29 @@
       closeRegisterPanel();
       renderSavedRegistration();
 
-      document.getElementById('modal-conf-display').textContent = confNum;
+      document.getElementById('modal-conf-display').textContent = registration.confirmationNumber;
       document.getElementById('details-modal-overlay').classList.add('show');
+      
+      // Ensure banner stays hidden after confirmation
+      const banner = document.getElementById('d-selected-banner');
+      if(banner) {
+          banner.classList.remove('show');
+          banner.style.display = 'none';
+      }
     }
 
     function closeDetailsModal() { document.getElementById('details-modal-overlay').classList.remove('show'); }
-    function openCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.add('show'); }
-    function closeCancelConfirm() { document.getElementById('cancel-modal-overlay').classList.remove('show'); }
+
+    function openCancelConfirm() {
+      const saved = getSavedRegistration();
+      const clinicSpan = document.getElementById('cancel-modal-clinic');
+      if (clinicSpan) clinicSpan.textContent = (saved && saved.clinic) ? saved.clinic : 'this clinic';
+      document.getElementById('cancel-modal-overlay').classList.add('show');
+    }
+
+    function closeCancelConfirm() {
+      document.getElementById('cancel-modal-overlay').classList.remove('show');
+    }
 
     function confirmCancelRegistration() {
       if (storageAvailable) {
@@ -868,6 +899,14 @@
       window.__sessionRegistration = null;
       closeCancelConfirm();
       renderSavedRegistration();
+      
+      if(selectedClinicName) {
+         const banner = document.getElementById('d-selected-banner');
+         if(banner) {
+             banner.style.display = 'flex';
+             banner.classList.add('show');
+         }
+      }
     }
 
     function getSavedRegistration() {
@@ -895,14 +934,13 @@
         }
         confirmedBox.classList.add('show');
         
-        // Ẩn vĩnh viễn banner nếu đã đăng ký thành công
-        document.body.classList.add('form-open');
+        const banner = document.getElementById('d-selected-banner');
+        if(banner) {
+            banner.classList.remove('show');
+            banner.style.display = 'none';
+        }
       } else {
         confirmedBox.classList.remove('show');
-        document.body.classList.remove('form-open');
-        if (selectedClinicName) {
-            document.getElementById('d-selected-banner').classList.add('show');
-        }
       }
     }
 
