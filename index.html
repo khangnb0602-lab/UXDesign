@@ -212,7 +212,7 @@
       margin-top: 4px; display: inline-block;
     }
 
-    /* FIX CỐ ĐỊNH BANNER FOOTER */
+    /* FIX STICKY BOTTOM FOOTER BANNER */
     .selected-banner {
       background: var(--green-light);
       border-top: 1px solid #a5d6a7;
@@ -243,7 +243,7 @@
     .report-issue-btn { background: #1a1a1a; }
     .action-btn.secondary { background: #fff; color: #1a1a1a; border: 1px solid #d8d4ce; }
 
-    /* FIX LỖI ẨN NÚT MOBILE: BIẾN FORM ĐĂNG KÝ THÀNH FULL SCREEN TRÊN MOBILE */
+    /* FULLSCREEN MOBILE CO ĐỊNH BIỂU MẪU ĐĂNG KÝ KHÔNG BỊ ĐÈ */
     .register-panel {
       display: none;
       flex-direction: column;
@@ -252,13 +252,13 @@
       background: #fff;
       border-top: 1px solid var(--border);
       position: fixed;
-      inset: 0; /* Đè toàn màn hình */
+      inset: 0;
       z-index: 150;
       overflow-y: auto;
     }
     .register-panel.show { display: flex; }
     .register-panel-head { display: flex; justify-content: space-between; align-items: flex-start; }
-    .register-panel-title { font-size: 14px; font-weight: 700; }
+    .register-panel-title { font-size: 14px; font-weight: 700; parding-right: 14px; }
     .register-panel-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
 
     .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
@@ -271,6 +271,20 @@
     .contact-form { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
     .contact-field { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; font-weight: 600; color: #555; }
     .contact-field input { border: 1.5px solid var(--border); border-radius: 6px; padding: 10px; font-size: 13px; }
+
+    /* Wrap nút điều hướng linh hoạt cho iPhone SE */
+    .register-actions-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px;
+      padding-bottom: 40px; /* Thêm khoảng đệm an toàn cuộn */
+      flex-wrap: wrap; 
+    }
+    .register-actions-row button {
+      flex: 1;
+      min-width: 120px;
+    }
 
     /* Confirmed banner */
     .registration-confirmed {
@@ -296,8 +310,9 @@
     .modal-desc { font-size: 12.5px; color: #555; line-height: 1.4; }
     .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
 
-    /* Đệm khoảng trống ở bước 4 để không bị đè bởi banner footer */
     .has-banner-padding { padding-bottom: 120px !important; }
+    .modal-list { margin-left: 20px; margin-top: 6px; margin-bottom: 6px; font-size: 12.5px; color: #333; }
+    .modal-list li { margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -441,7 +456,7 @@
 
               <div id="register-step-slot">
                 <div class="slot-grid" id="slot-grid"></div>
-                <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                <div class="register-actions-row">
                   <button class="action-btn" id="register-next-btn" onclick="goToContactForm()" disabled>Continue →</button>
                 </div>
               </div>
@@ -453,7 +468,7 @@
                   <label class="contact-field"><span>Email</span><input type="email" id="contact-email" placeholder="maria@example.com"></label>
                 </div>
                 <div id="contact-error" style="color:var(--red); font-size:11px; margin-top:8px; font-weight:600;"></div>
-                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px; padding-bottom: 20px;">
+                <div class="register-actions-row">
                   <button class="action-btn secondary" onclick="backToSlotPicker()">Back</button>
                   <button class="action-btn" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
                 </div>
@@ -479,7 +494,7 @@
                 </div>
               </div>
               <button class="action-btn" style="width:100%;" onclick="goTo(2)">
-                ← Return to layout tool workspace
+                &larr; Return to layout tool workspace
               </button>
               <div class="log-block">
                 <div class="log-entry err">[ERR] table.clinic-table axis overflow</div>
@@ -613,13 +628,15 @@
       
       const banner = document.getElementById(prefix + '-selected-banner');
       document.getElementById(prefix + '-selected-text').textContent = '✓ ' + name;
-      banner.classList.add('show');
       
-      document.getElementById('d-step-4').classList.add('has-banner-padding');
+      // HIDE BOTTOM BANNER IF REGISTER OPEN TO AVOID OVERLAP
+      if (!document.getElementById('register-panel').classList.contains('show')) {
+        banner.classList.add('show');
+        document.getElementById('d-step-4').classList.add('has-banner-padding');
+      }
       
       selectedClinicName = name;
       selectedClinicMeta = dist;
-      closeRegisterPanel();
     }
 
     function openRegisterPanel() {
@@ -638,12 +655,20 @@
         grid.appendChild(btn);
       });
 
+      // HIDE THE BOTTOM BANNER TO GIVE ROOM FOR ACTIONS
+      document.getElementById('d-selected-banner').classList.remove('show');
+
       showSlotStep();
       document.getElementById('register-next-btn').disabled = true;
       panel.classList.add('show');
     }
 
-    function closeRegisterPanel() { document.getElementById('register-panel').classList.remove('show'); }
+    function closeRegisterPanel() { 
+      document.getElementById('register-panel').classList.remove('show');
+      if (selectedClinicName && !getSavedRegistration()) {
+         document.getElementById('d-selected-banner').classList.add('show');
+      }
+    }
 
     function showSlotStep() {
       document.getElementById('register-step-slot').style.display = '';
@@ -725,6 +750,7 @@
         document.getElementById('rc-conf-number').textContent = 'Confirmation #' + saved.confirmationNumber;
         confirmedBox.classList.add('show');
         document.getElementById('d-step-4').classList.add('has-banner-padding');
+        document.getElementById('d-selected-banner').classList.remove('show');
       } else {
         confirmedBox.classList.remove('show');
       }
