@@ -24,7 +24,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* ── SCROLL FIX NATIVE ── */
+    /* ── FIX NATIVE SCROLL TRÊN FIREFOX MOBILE ── */
     html, body { 
       height: auto; 
       min-height: 100%; 
@@ -85,7 +85,7 @@
     
     .browser-body {
       display: block;
-      padding-bottom: 40px; 
+      padding-bottom: 60px; 
     }
 
     /* ── Real-site interaction affordances ── */
@@ -116,7 +116,7 @@
       height: auto; 
       min-height: 100%;
       animation: fadeIn .3s ease;
-      padding-bottom: 140px; /* An toàn cho banner mobile */
+      padding-bottom: 120px; /* Đệm an toàn để không bị vướng đáy màn hình */
     }
     .step-content.visible { display: flex; }
 
@@ -196,7 +196,7 @@
     .clinic-dist { color: var(--muted); }
     .open-tag { display: inline-block; font-size: 10px; font-weight: 700; background: var(--green-light); color: var(--green); padding: 4px 8px; border-radius: 4px; margin-top: 8px; }
 
-    /* ── FIXED BANNER ── */
+    /* ── DUY NHẤT 1 BANNER CỐ ĐỊNH ── */
     .selected-banner {
       background: var(--green-light);
       border-top: 1px solid #a5d6a7;
@@ -204,7 +204,7 @@
       font-size: 13px;
       color: var(--green);
       font-weight: 600;
-      display: none; /* Ẩn theo mặc định */
+      display: none; /* Mặc định ẩn */
       flex-direction: column;
       gap: 12px;
       position: fixed;
@@ -259,12 +259,11 @@
     }
     .contact-error { color: var(--red); font-size: 12px; font-weight: 600; margin-top: 10px; min-height: 1em; }
 
-    /* FLEX-WRAP CHO NÚT CONFIRM + THÊM ĐỆM PADDING ĐỂ CUỘN QUA NÚT TRÊN IPHONE SE */
-    .register-confirm-row { 
-      display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; 
-      padding-bottom: 30px; /* Đệm cách đáy an toàn */
-    }
-    .register-confirm-row button { flex: 1; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 8px; min-width: 120px; }
+    /* KHÔNG BỊ TRÀN CHỮ, ĐỆM ĐÁY RỘNG ĐỂ CUỘN QUA NÚT TRÊN IPHONE SE */
+    .register-confirm-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; padding-bottom: 24px;}
+    .register-confirm-row button { flex: 1; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 8px; min-width: 120px; border: none; cursor: pointer; text-align: center;}
+    .btn-register-confirm { background: var(--blue); color: #fff; }
+    .btn-register-back { background: #f5f5f0; color: var(--text); border: 1px solid var(--border); }
 
     /* ── Modals & Confirmed states ────── */
     .registration-confirmed {
@@ -289,6 +288,14 @@
     .btn-primary { background: var(--blue); color: #fff;}
     .btn-secondary { background: #f5f5f0; color: #1a1a1a; border: 1px solid var(--border); }
     .btn-danger { background: var(--red); color: #fff; }
+
+    /* Step 5 */
+    .report-wrap { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .toast { background: var(--green-light); border: 1px solid #a5d6a7; border-radius: 6px; padding: 12px 14px; display: flex; gap: 8px; }
+    .log-block { font-family: var(--mono); font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
+    .log-entry { background: #f0f0ec; padding: 6px 12px; border-radius: 6px; color: #666; }
+    .log-entry.err { background: #fde8e8; color: var(--red); }
+    .log-entry.ok { background: var(--green-light); color: var(--green); }
   </style>
 </head>
 <body>
@@ -432,7 +439,7 @@
               <div id="register-step-slot">
                 <div class="slot-grid" id="slot-grid"></div>
                 <div class="register-confirm-row">
-                  <button class="register-confirm-btn" style="width:100%;" id="register-next-btn" onclick="goToContactForm()" disabled>Continue &rarr;</button>
+                  <button class="btn-register-confirm" style="width:100%;" id="register-next-btn" onclick="goToContactForm()" disabled>Continue &rarr;</button>
                 </div>
               </div>
 
@@ -453,8 +460,8 @@
                 </div>
                 <div id="contact-error" class="contact-error"></div>
                 <div class="register-confirm-row">
-                  <button class="register-back-btn btn-secondary" onclick="backToSlotPicker()">Back</button>
-                  <button class="register-confirm-btn" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
+                  <button class="btn-register-back" onclick="backToSlotPicker()">Back</button>
+                  <button class="btn-register-confirm" id="register-confirm-btn" onclick="confirmRegistration()">Confirm reservation</button>
                 </div>
               </div>
             </div>
@@ -466,15 +473,7 @@
                 <div id="rc-text" style="font-size:12px;margin-top:4px;"></div>
                 <div class="rc-conf-number" id="rc-conf-number"></div>
               </div>
-              <button class="rc-cancel" onclick="openCancelConfirm()">Cancel</button>
-            </div>
-            
-            <div class="selected-banner" id="d-selected-banner">
-              <span id="d-selected-text" style="font-size:13px;">✓ Clinic selected</span>
-              <div class="selected-actions">
-                <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot &rarr;</button>
-                <button class="report-issue-btn" onclick="goTo(5)">Report broken table &rarr;</button>
-              </div>
+              <button class="action-btn secondary" style="padding:8px 12px;font-size:11px;" onclick="openCancelConfirm()">Cancel</button>
             </div>
             
           </div>
@@ -495,6 +494,15 @@
               </div>
             </div>
           </div>
+
+          <div class="selected-banner" id="d-selected-banner">
+            <span id="d-selected-text" style="font-size:13px;">✓ Clinic selected</span>
+            <div class="selected-actions">
+              <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot &rarr;</button>
+              <button class="report-issue-btn" onclick="goTo(5)">Report broken table &rarr;</button>
+            </div>
+          </div>
+          
       </div>
     </div>
   </main>
@@ -585,18 +593,38 @@
         
         closeRegisterPanel();
         renderSavedRegistration();
+      } else if (step !== 4) {
+         // Luôn tắt banner nếu không ở trang 4
+         const banner = document.getElementById('d-selected-banner');
+         if (banner) {
+           banner.classList.remove('show');
+           banner.style.display = 'none';
+         }
       }
 
+      const toast = document.getElementById('a11y-toast');
+      if (toast) toast.classList.remove('show');
+
+      if (step === 1) {
+        toastTimer = setTimeout(() => {
+          if (toast) toast.classList.add('show');
+        }, 1400);
+      }
+
+      const dp = document.getElementById('d-progress');
       if (step === 3) {
-        const dp = document.getElementById('d-progress');
         if (dp) {
           dp.classList.remove('running');
           void dp.offsetWidth;
           setTimeout(() => dp.classList.add('running'), 100);
         }
         advanceTimer = setTimeout(() => goTo(4), 2600);
+      } else if (dp) {
+        dp.classList.remove('running');
+        void dp.offsetWidth;
       }
       
+      // Reset scroll natively
       window.scrollTo(0, 0);
     }
 
@@ -630,7 +658,7 @@
       if (banner && textEl) {
         textEl.textContent = '✓ ' + name;
         
-        // Bật banner nếu form chưa mở
+        // Chỉ bật banner nếu form chưa mở
         if (!document.getElementById('register-panel').classList.contains('show')) {
           banner.style.display = 'flex';
           banner.classList.add('show');
@@ -652,6 +680,7 @@
       slots.forEach(time => {
         const btn = document.createElement('button');
         btn.className = 'slot-btn';
+        btn.type = 'button';
         btn.textContent = time;
         btn.onclick = () => pickSlot(btn, time);
         grid.appendChild(btn);
@@ -713,14 +742,14 @@
       }, 50);
     }
 
-    function backToSlotPicker() { showSlotStep(); }
+    function backToSlotPicker() {
+      showSlotStep();
+    }
 
     function generateConfirmationNumber() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; 
       let code = 'BC-';
-      for (let i = 0; i < 6; i++) {
-        code += chars[Math.floor(Math.random() * chars.length)];
-      }
+      for (let i = 0; i < 6; i++) { code += chars[Math.floor(Math.random() * chars.length)]; }
       return code;
     }
 
@@ -813,11 +842,17 @@
 
     function renderSavedRegistration() {
       const confirmedBox = document.getElementById('registration-confirmed');
+      const rcText = document.getElementById('rc-text');
+      const rcConfNumber = document.getElementById('rc-conf-number');
+      if (!confirmedBox || !rcText) return;
+
       const saved = getSavedRegistration();
 
-      if (saved && saved.clinic) {
-        document.getElementById('rc-text').textContent = saved.clinic + ' — today at ' + saved.time;
-        document.getElementById('rc-conf-number').textContent = 'Confirmation #' + saved.confirmationNumber;
+      if (saved && saved.clinic && saved.time) {
+        rcText.textContent = saved.clinic + ' — today at ' + saved.time;
+        if (rcConfNumber) {
+          rcConfNumber.textContent = saved.confirmationNumber ? 'Confirmation #' + saved.confirmationNumber : '';
+        }
         confirmedBox.classList.add('show');
         
         const banner = document.getElementById('d-selected-banner');
@@ -831,7 +866,8 @@
     }
 
     renderSavedRegistration();
-    if (getSavedRegistration()) {
+    const existingRegistration = getSavedRegistration();
+    if (existingRegistration) {
       stepHistory = [0, 4]; updateStep(4, true);
     } else {
       updateStep(0, true);
