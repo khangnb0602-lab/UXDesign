@@ -88,6 +88,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* ── Real-site interaction affordances ── */
@@ -114,11 +115,6 @@
     }
     @media (max-width: 600px) {
       .clinic-grid { grid-template-columns: 1fr; }
-    }
-    .panel-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
     }
 
     .a11y-toast {
@@ -161,11 +157,12 @@
     .step-content {
       display: none;
       flex-direction: column;
-      height: 100%;
+      height: auto;
       flex: 1;
       animation: fadeIn .3s ease;
     }
     .step-content.visible { display: flex; }
+    @keyframes fadeIn { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* ── Broken Table View ────────────────── */
     .page-heading { font-size: 16px; font-weight: 700; padding: 12px 16px 4px; color: #003366; }
@@ -212,7 +209,7 @@
       margin-top: 4px; display: inline-block;
     }
 
-    /* FIX STICKY BOTTOM FOOTER BANNER */
+    /* ── Sticky Bottom Banner ── */
     .selected-banner {
       background: var(--green-light);
       border-top: 1px solid #a5d6a7;
@@ -243,7 +240,7 @@
     .report-issue-btn { background: #1a1a1a; }
     .action-btn.secondary { background: #fff; color: #1a1a1a; border: 1px solid #d8d4ce; }
 
-    /* FULLSCREEN MOBILE CO ĐỊNH BIỂU MẪU ĐĂNG KÝ KHÔNG BỊ ĐÈ */
+    /* ── Booking Container & Form ── */
     .register-panel {
       display: none;
       flex-direction: column;
@@ -251,14 +248,11 @@
       padding: 16px;
       background: #fff;
       border-top: 1px solid var(--border);
-      position: fixed;
-      inset: 0;
-      z-index: 150;
-      overflow-y: auto;
+      margin-top: 12px;
     }
     .register-panel.show { display: flex; }
     .register-panel-head { display: flex; justify-content: space-between; align-items: flex-start; }
-    .register-panel-title { font-size: 14px; font-weight: 700; parding-right: 14px; }
+    .register-panel-title { font-size: 14px; font-weight: 700; padding-right: 14px; }
     .register-panel-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
 
     .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
@@ -272,13 +266,11 @@
     .contact-field { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; font-weight: 600; color: #555; }
     .contact-field input { border: 1.5px solid var(--border); border-radius: 6px; padding: 10px; font-size: 13px; }
 
-    /* Wrap nút điều hướng linh hoạt cho iPhone SE */
     .register-actions-row {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
       margin-top: 20px;
-      padding-bottom: 40px; /* Thêm khoảng đệm an toàn cuộn */
       flex-wrap: wrap; 
     }
     .register-actions-row button {
@@ -310,7 +302,8 @@
     .modal-desc { font-size: 12.5px; color: #555; line-height: 1.4; }
     .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
 
-    .has-banner-padding { padding-bottom: 120px !important; }
+    /* Khoảng trống cuộn chân trang an toàn */
+    .has-banner-padding { padding-bottom: 110px !important; }
     .modal-list { margin-left: 20px; margin-top: 6px; margin-bottom: 6px; font-size: 12.5px; color: #333; }
     .modal-list li { margin-bottom: 4px; }
   </style>
@@ -326,7 +319,7 @@
         </button>
       </div>
       
-      <div class="browser-body">
+      <div class="browser-body" id="main-scroller">
           <div class="step-content visible" id="d-step-0">
             <div class="bc-health-header" style="padding:10px 16px;">
               <span class="bc-logo" style="font-size:14px;"><span>BC</span> Health Services</span>
@@ -437,21 +430,13 @@
               </div>
             </div>
 
-            <div class="selected-banner" id="d-selected-banner">
-              <span id="d-selected-text">Clinic selected</span>
-              <div class="selected-actions">
-                <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot →</button>
-                <button class="action-btn secondary" style="padding:7px 10px;" onclick="goTo(5)">Report to webmaster</button>
-              </div>
-            </div>
-
             <div class="register-panel" id="register-panel">
               <div class="register-panel-head">
                 <div>
                   <div class="register-panel-title">Pick a slot at <span id="register-clinic-name">Clinic</span></div>
                   <div class="register-panel-sub" id="register-panel-sub">Reserving holds your spot in the queue.</div>
                 </div>
-                <button style="background:none; border:none; font-size:18px; color:var(--muted);" onclick="closeRegisterPanel()">✕</button>
+                <button style="background:none; border:none; font-size:18px; color:var(--muted); padding: 4px;" onclick="closeRegisterPanel()">✕</button>
               </div>
 
               <div id="register-step-slot">
@@ -503,6 +488,15 @@
             </div>
           </div>
       </div>
+
+      <div class="selected-banner" id="d-selected-banner">
+        <span id="d-selected-text">Clinic selected</span>
+        <div class="selected-actions">
+          <button class="register-btn" onclick="openRegisterPanel()">Register for a time slot →</button>
+          <button class="action-btn secondary" style="padding:7px 10px;" onclick="goTo(5)">Report to webmaster</button>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -629,7 +623,7 @@
       const banner = document.getElementById(prefix + '-selected-banner');
       document.getElementById(prefix + '-selected-text').textContent = '✓ ' + name;
       
-      // HIDE BOTTOM BANNER IF REGISTER OPEN TO AVOID OVERLAP
+      // Chỉ hiện thanh footer nếu biểu mẫu chưa mở
       if (!document.getElementById('register-panel').classList.contains('show')) {
         banner.classList.add('show');
         document.getElementById('d-step-4').classList.add('has-banner-padding');
@@ -655,18 +649,25 @@
         grid.appendChild(btn);
       });
 
-      // HIDE THE BOTTOM BANNER TO GIVE ROOM FOR ACTIONS
+      // Ẩn thanh banner cố định để nhường chỗ cuộn mượt mà
       document.getElementById('d-selected-banner').classList.remove('show');
+      document.getElementById('d-step-4').classList.remove('has-banner-padding');
 
       showSlotStep();
       document.getElementById('register-next-btn').disabled = true;
       panel.classList.add('show');
+
+      // Tự động cuộn mượt xuống vùng chọn giờ vừa mở
+      setTimeout(() => {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
     }
 
     function closeRegisterPanel() { 
       document.getElementById('register-panel').classList.remove('show');
       if (selectedClinicName && !getSavedRegistration()) {
          document.getElementById('d-selected-banner').classList.add('show');
+         document.getElementById('d-step-4').classList.add('has-banner-padding');
       }
     }
 
@@ -685,7 +686,12 @@
     function goToContactForm() {
       if (!pickedSlot) return;
       document.getElementById('register-step-slot').style.display = 'none';
-      document.getElementById('register-step-contact').style.display = '';
+      const contactSec = document.getElementById('register-step-contact');
+      contactSec.style.display = '';
+      
+      setTimeout(() => {
+        contactSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
     }
 
     function backToSlotPicker() { showSlotStep(); }
